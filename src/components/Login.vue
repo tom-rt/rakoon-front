@@ -9,6 +9,9 @@
       <input v-model="password" />
     </div>
     <div>
+      <button v-on:click="subscribe()">Subscribe</button>
+    </div>
+    <div>
       <button v-on:click="connect()">Connect</button>
     </div>
   </div>
@@ -21,11 +24,20 @@ export default {
   name: "login",
   components: {},
   data() {
-    return { user: null, password: null, apiService: new ApiService() };
+    return {
+      user: null,
+      password: null,
+      apiService: new ApiService()
+    };
   },
   methods: {
-    connect: function() {
-      this.apiService.connect(this.user, this.password);
+    connect: async function() {
+      const toto = await this.apiService.connect(this.user, this.password);
+      console.log(toto);
+    },
+    subscribe: async function() {
+      const toto = await this.apiService.subscribe(this.user, this.password);
+      console.log(toto);
     }
   }
 };
