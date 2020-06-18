@@ -1,21 +1,23 @@
 {
-  "name": "rakoon-front",
-  "version": "0.1.0",
+  "name": "user-service-front",
+  "version": "1.0.0",
+  "description": "My neat Nuxt.js project",
+  "author": "Thomas Raout",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
   },
   "dependencies": {
-    "axios": "^0.19.2",
-    "core-js": "^3.4.4",
-    "vue": "^2.6.10"
+    "nuxt": "^2.12.2"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.1.0",
-    "@vue/cli-service": "^4.1.0",
-    "prettier": "^1.19.1",
-    "vue-template-compiler": "^2.6.10"
+    "@nuxt/typescript-build": "^0.6.0",
+    "@nuxtjs/tailwindcss": "^1.0.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "^1.19.1"
   }
 }
