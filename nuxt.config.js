@@ -1,5 +1,6 @@
 export default {
     modules: [
+        '@nuxtjs/tailwindcss',
         '@nuxtjs/axios',
         'cookie-universal-nuxt'
     ],
@@ -8,6 +9,9 @@ export default {
     },
     plugins: [
         '~/plugins/axios.ts'
+    ],
+    css: [
+        { src: '~assets/css/style.css', lang: 'css' }
     ],
     build: {
         additionalExtensions: ['ts', 'tsx'],
