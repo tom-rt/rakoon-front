@@ -3,28 +3,24 @@
     "name": "home",
     "path": "/home",
     "component": "/Users/thomasraout/programming/perso/rakoon/rakoon-front/pages/home.vue",
-    "chunkName": "pages/home",
-    "_name": "_acf75c74"
+    "chunkName": "pages/home"
   },
   {
     "name": "login",
     "path": "/login",
     "component": "/Users/thomasraout/programming/perso/rakoon/rakoon-front/pages/login.vue",
-    "chunkName": "pages/login",
-    "_name": "_b62a64dc"
+    "chunkName": "pages/login"
   },
   {
     "name": "subscribe",
     "path": "/subscribe",
     "component": "/Users/thomasraout/programming/perso/rakoon/rakoon-front/pages/subscribe.vue",
-    "chunkName": "pages/subscribe",
-    "_name": "_2fc47273"
+    "chunkName": "pages/subscribe"
   },
   {
     "name": "index",
     "path": "/",
     "component": "/Users/thomasraout/programming/perso/rakoon/rakoon-front/pages/index.vue",
-    "chunkName": "pages/index",
-    "_name": "_4979ab0a"
+    "chunkName": "pages/index"
   }
 ]

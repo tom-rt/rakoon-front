@@ -27,7 +27,7 @@ export default {
       this.userData = ret.data;
     },
     async disconnect() {
-      await this.$axios.post(`/user/${this.$store.state.userId}/logout`);
+      await this.$axios.put(`/user/${this.$store.state.userId}/logout`);
       this.$store.commit("logout");
       this.$router.push("/login");
     }
