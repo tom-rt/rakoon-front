@@ -5,7 +5,9 @@
       rel="stylesheet"
     />
     <navbar />
-    <nuxt />
+    <div class="app-container">
+      <nuxt />
+    </div>
   </div>
 </template>
 
@@ -19,4 +21,8 @@ export default {
 </script>
 
 <style>
+.app-container {
+  padding-top: 3rem;
+  width: 100%;
+}
 </style>

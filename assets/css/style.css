@@ -1,9 +1,9 @@
 body {
-    --onyx: #39393A;
+    /* --onyx: #39393A;
     --white: #FAFAFF;
     --green: #329F5B;
     --blue: #59A5D8;
-    --red: #E76F51;
+    --red: #E76F51; */
     margin: 0px;
     background-color: var(--white);
     font-family: 'Montserrat', sans-serif;

@@ -1,7 +1,11 @@
 <template>
-  <div class="navbar">
-    <div class="title font-extrabold">Rakoon</div>
-    <button v-if="this.$store.state.isConnected" v-on:click="disconnect">Disconnect</button>
+  <div class="navbar bg-gray-700 text-gray-100">
+    <div class="title font-extrabold pl-3">Rakoon</div>
+    <button
+      v-if="this.$store.state.isConnected"
+      v-on:click="disconnect"
+      class="mr-1 mt-1 mb-1 pl-1 pr-1 rounded border border-gray-100 hover:bg-gray-100 hover:text-gray-700"
+    >Disconnect</button>
   </div>
 </template>
 
@@ -25,11 +29,8 @@ export default {
 <style>
 .navbar {
   position: fixed;
-  background-color: var(--onyx);
-  color: var(--white);
   height: 3rem;
   display: flex;
-  padding-left: 1rem;
 }
 
 .title {
