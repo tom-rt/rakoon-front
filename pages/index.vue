@@ -1,14 +1,12 @@
-<template>
-  <h1>default {{name}}</h1>
-</template>
+<template></template>
 
 <script>
 export default {
-  name: 'test',
+  name: "default",
   middleware({ redirect }) {
-    return redirect('/login')
+    return redirect("/login");
   }
-}
+};
 </script>
 
 <style>

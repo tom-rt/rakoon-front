@@ -1,12 +1,13 @@
 <template>
   <div>
-    <h1>HOME</h1>
     <form @submit.prevent="getUserData">
       <p v-if="formError" class="error">{{ formError }}</p>
       <p v-if="userData">{{ userData }}</p>
-      <button type="submit">Get user data</button>
+      <button
+        type="submit"
+        class="hover:bg-blue-700 opacity-100 cursor-pointer bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      >Get user data</button>
     </form>
-    <button v-on:click="disconnect">Disconnect</button>
   </div>
 </template>
 

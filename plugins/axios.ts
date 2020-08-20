@@ -14,7 +14,6 @@ export default ({ $axios, store, redirect }) => {
             })
             return $axios(originalRequest);
          } else {
-
             this.$store.commit('logout')
             redirect("/login")
          }
