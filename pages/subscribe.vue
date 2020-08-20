@@ -30,7 +30,10 @@
         >Username already taken</div>
         <div class="flex items-center justify-between">
           <button
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            :disabled="canSubmit == false"
+            v-bind:class="{ 'hover:bg-blue-700 opacity-100 cursor-pointer': canSubmit,
+                            'opacity-50 cursor-not-allowed': !canSubmit}"
+            class="bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
           >Subscribe</button>
           <nuxt-link
@@ -50,7 +53,8 @@ export default {
     return {
       username: "",
       password: "",
-      subscriptionFailed: false
+      subscriptionFailed: false,
+      canSubmit: false
     };
   },
   methods: {
@@ -73,6 +77,24 @@ export default {
       } else {
         this.subscriptionFailed = true;
         this.password = "";
+      }
+    }
+  },
+  watch: {
+    username: function() {
+      console.log(this.username.length, this.password.length);
+      if (this.username.length > 0 && this.password.length > 0) {
+        this.canSubmit = true;
+      } else {
+        this.canSubmit = false;
+      }
+    },
+    password: function() {
+      console.log(this.username.length, this.password.length);
+      if (this.username.length > 0 && this.password.length > 0) {
+        this.canSubmit = true;
+      } else {
+        this.canSubmit = false;
       }
     }
   }
