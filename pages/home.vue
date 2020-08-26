@@ -18,11 +18,16 @@ export default {
   asyncData() {
     return {
       formError: null,
-      userData: null
+      userData: null,
+      basePath: "/home/thomas/rakoon"
     };
   },
   middleware: "authenticated",
   methods: {
+    async getPath() {
+      const ret = await this.$axios.get(`/directory`);
+      this.userData = ret.data;
+    },
     async getUserData() {
       const ret = await this.$axios.get(`/user/${this.$store.state.userId}`);
       this.userData = ret.data;
