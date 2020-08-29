@@ -1,6 +1,6 @@
 <template>
-  <div class="navbar bg-gray-700 text-gray-100">
-    <div class="title font-extrabold pl-3">Rakoon</div>
+  <div class="navbar border-b bg-gray-700 text-gray-100">
+    <div class="text-4xl font-extrabold pl-3">Rakoon</div>
     <button
       v-if="this.$store.state.isConnected"
       v-on:click="disconnect"
@@ -29,11 +29,7 @@ export default {
 <style>
 .navbar {
   position: fixed;
-  height: 3rem;
+  height: 3.5rem;
   display: flex;
-}
-
-.title {
-  font-size: 2rem;
 }
 </style>

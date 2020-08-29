@@ -5,7 +5,8 @@
       rel="stylesheet"
     />
     <navbar />
-    <div class="app-container">
+    <div class="app-container flex flex-row">
+      <sidebar />
       <nuxt />
     </div>
   </div>
@@ -13,16 +14,18 @@
 
 <script>
 import navbar from "@/components/navbar";
+import sidebar from "@/components/sidebar";
 export default {
   components: {
-    navbar
+    navbar,
+    sidebar
   }
 };
 </script>
 
 <style>
 .app-container {
-  padding-top: 3rem;
+  padding-top: 3.5rem;
   width: 100%;
 }
 </style>
