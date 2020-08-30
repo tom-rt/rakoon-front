@@ -1,0 +1,43 @@
+<template>
+  <div class="sidebar bg-gray-700 text-gray-100 w-24 border-r">
+    <nuxt-link to="/home">
+      <div
+        v-on:click="highlight('home')"
+        v-bind:class="{ 'bg-gray-100 text-gray-700 border-r': isHome}"
+        class="flex items-center justify-center text-center h-8 border-b cursor-pointer hover:bg-gray-100 hover:text-gray-700 hover:border-r"
+      >Accueil</div>
+    </nuxt-link>
+    <nuxt-link to="/desktop">
+      <div
+        v-on:click="highlight('desktop')"
+        v-bind:class="{ 'bg-gray-100 text-gray-700 border-r': isDesktop}"
+        class="flex items-center justify-center text-center h-8 border-b cursor-pointer hover:bg-gray-100 hover:text-gray-700 hover:border-r"
+      >Bureau</div>
+    </nuxt-link>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      isHome: true,
+      isDesktop: false
+    };
+  },
+  methods: {
+    highlight(tab) {
+      if (tab == "home") {
+        this.isHome = true;
+        this.isDesktop = false;
+      } else if (tab == "desktop") {
+        this.isHome = false;
+        this.isDesktop = true;
+      }
+    }
+  }
+};
+</script>
+
+<style>
+</style>

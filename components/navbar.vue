@@ -1,6 +1,6 @@
 <template>
   <div class="navbar border-b bg-gray-700 text-gray-100">
-    <div class="text-4xl font-extrabold pl-3">Rakoon</div>
+    <div class="text-3xl font-extrabold pl-3">Rakoon</div>
     <button
       v-if="this.$store.state.isConnected"
       v-on:click="disconnect"
@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  asyncData() {
+  data() {
     return {
       isConnected: this.$store.state.isConnected
     };
@@ -29,7 +29,7 @@ export default {
 <style>
 .navbar {
   position: fixed;
-  height: 3.5rem;
+  height: 3rem;
   display: flex;
 }
 </style>

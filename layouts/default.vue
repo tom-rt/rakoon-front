@@ -6,16 +6,22 @@
     />
     <navbar />
     <div class="app-container flex flex-row">
-      <sidebar />
+      <sidebar v-if="this.$store.state.isConnected" />
       <nuxt />
     </div>
   </div>
 </template>
 
+
 <script>
 import navbar from "@/components/navbar";
 import sidebar from "@/components/sidebar";
 export default {
+  data() {
+    return {
+      isConnected: this.$store.state.isConnected
+    };
+  },
   components: {
     navbar,
     sidebar
@@ -25,7 +31,7 @@ export default {
 
 <style>
 .app-container {
-  padding-top: 3.5rem;
+  padding-top: 3rem;
   width: 100%;
 }
 </style>

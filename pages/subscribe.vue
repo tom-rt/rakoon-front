@@ -49,7 +49,7 @@
 
 <script>
 export default {
-  asyncData() {
+  data() {
     return {
       username: "",
       password: "",
@@ -82,7 +82,6 @@ export default {
   },
   watch: {
     username: function() {
-      console.log(this.username.length, this.password.length);
       if (this.username.length > 0 && this.password.length > 0) {
         this.canSubmit = true;
       } else {
@@ -90,7 +89,6 @@ export default {
       }
     },
     password: function() {
-      console.log(this.username.length, this.password.length);
       if (this.username.length > 0 && this.password.length > 0) {
         this.canSubmit = true;
       } else {
