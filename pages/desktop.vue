@@ -1,12 +1,14 @@
 <template>
-  <div>DESKTOP</div>
+  <div class="m-4">{{basePath}}</div>
 </template>
 
 <script>
 export default {
-  data() {
+  async asyncData(context) {
+    const req = await context.app.$axios.get(`/list/directory}`);
     return {
-      basePath: "/home/thomas/rakoon"
+      userData: req.data,
+      basePath: "/rakoon"
     };
   },
   middleware: "authenticated",

@@ -25,6 +25,9 @@ export default {
       isDesktop: false
     };
   },
+  beforeMount() {
+    this.highlight(this.$router.currentRoute.path.replace("/", ""));
+  },
   methods: {
     highlight(tab) {
       if (tab == "home") {
