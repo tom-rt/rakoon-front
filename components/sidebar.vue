@@ -21,7 +21,7 @@
 export default {
   data() {
     return {
-      isHome: true,
+      isHome: false,
       isDesktop: false
     };
   },
@@ -30,12 +30,12 @@ export default {
   },
   methods: {
     highlight(tab) {
-      if (tab == "home") {
+      if (tab == "desktop") {
+        this.isDesktop = true;
+        this.isHome = false;
+      } else {
         this.isHome = true;
         this.isDesktop = false;
-      } else if (tab == "desktop") {
-        this.isHome = false;
-        this.isDesktop = true;
       }
     }
   }

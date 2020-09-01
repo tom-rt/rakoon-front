@@ -4,7 +4,7 @@ export default ({ $axios, store, redirect }) => {
    })
 
    $axios.onResponseError(async err => {
-      if (err.response.status == 401 && err.response.data.message == "Token expired.") {
+      if (err.response && err.response.status == 401 && err.response.data.message == "Token expired.") {
          const refresh = await $axios.post('/refresh/token')
          if (refresh.status == 200) {
             let originalRequest = err.config;
