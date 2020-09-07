@@ -7,11 +7,12 @@
     <navbar />
     <div class="app-container flex flex-row">
       <sidebar v-if="this.$store.state.isConnected" />
-      <nuxt />
+      <div class="pl-24 flex flex-col">
+        <nuxt />
+      </div>
     </div>
   </div>
 </template>
-
 
 <script>
 import navbar from "@/components/navbar";

@@ -1,8 +1,6 @@
 <template>
   <div>
-    <form @submit.prevent="getUserData">
-      <div>Bienvenue {{ userData.name}} ! Ton id est le {{userData.id}}</div>
-    </form>
+    <div>Bienvenue {{ userData.name}} ! Ton id est le {{userData.id}}</div>
   </div>
 </template>
 

@@ -57,6 +57,7 @@ export default {
       canSubmit: false
     };
   },
+  middleware: "authenticated",
   methods: {
     async subscribe() {
       const ret = await this.$axios.post("/user", {

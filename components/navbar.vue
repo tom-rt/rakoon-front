@@ -5,7 +5,7 @@
       v-if="this.$store.state.isConnected"
       v-on:click="disconnect"
       class="mr-1 mt-1 mb-1 pl-1 pr-1 rounded border border-gray-100 hover:bg-gray-100 hover:text-gray-700"
-    >Disconnect</button>
+    >Déconnexion</button>
   </div>
 </template>
 
