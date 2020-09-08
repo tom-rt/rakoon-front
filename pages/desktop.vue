@@ -4,12 +4,20 @@
     <div class="flex flex-row w-full p-4 flex-wrap content-start">
       <div
         class="flex flex-col m-4 h-auto w-32 items-center content-start cursor-pointer"
-        v-for="dir in this.directoryContent.directories"
-        v-bind:key="dir"
+        v-for="fd in this.directoryContent"
+        v-bind:key="fd"
       >
-        <div class="flex flex-col items-center h-auto rounded border-solid border">
-          <img class="w-20" src="../assets/icons/folder.svg" />
-          <div class="text-black text-center h-auto mx-6">{{dir}}</div>
+        <div
+          class="flex flex-col items-center h-auto rounded border-solid border border-white hover:border-gray-300"
+        >
+          <img v-if="fd.type == 'directory'" class="w-20" src="../assets/icons/folder.svg" />
+          <img
+            v-if="fd.type == 'file'"
+            class="file-custom mt-2 mr-10 ml-10"
+            src="../assets/icons/document.svg"
+          />
+          <img v-if="fd.type == 'image'" class="w-20" src="../assets/icons/picture.svg" />
+          <div class="text-black text-center h-auto mx-6">{{fd.name}}</div>
         </div>
       </div>
     </div>
@@ -40,4 +48,7 @@ export default {
 </script>
 
 <style>
+.file-custom {
+  width: 4.5rem;
+}
 </style>
