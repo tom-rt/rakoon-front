@@ -8,7 +8,8 @@ export default {
         baseURL: 'http://localhost:8081/v1'
     },
     plugins: [
-        '~/plugins/axios.ts'
+        '~/plugins/axios.ts',
+        '~/plugins/tooltip.ts'
     ],
     css: [
         { src: '~assets/css/style.css', lang: 'css' }

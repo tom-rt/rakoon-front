@@ -1,11 +1,11 @@
 <template>
   <div class="flex flex-col h-full">
-    <div class="flex p-4 h-16">{{basePath}}</div>
-    <div class="flex flex-row w-full p-4 flex-wrap content-start">
+    <div class="flex items-center p-4 h-16 text-4xl">{{basePath}}</div>
+    <div class="flex flex-row w-full h-full flex-wrap content-start items-center">
       <div
         class="flex flex-col m-4 h-auto w-32 items-center content-start cursor-pointer"
-        v-for="fd in this.directoryContent"
-        v-bind:key="fd"
+        v-for="(fd, idx) in this.directoryContent"
+        :key="idx"
       >
         <div
           class="flex flex-col items-center h-auto rounded border-solid border border-white hover:border-gray-300"
@@ -17,7 +17,7 @@
             src="../assets/icons/document.svg"
           />
           <img v-if="fd.type == 'image'" class="w-20" src="../assets/icons/picture.svg" />
-          <div class="text-black text-center h-auto mx-6">{{fd.name}}</div>
+          <div class="text-black text-center h-auto mx-6">{{fd.trimmedName}}</div>
         </div>
       </div>
     </div>

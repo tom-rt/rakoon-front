@@ -21,7 +21,9 @@ export const mutations = {
         state.isConnected = true;
         this.$cookies.set('token', state.token, {
             path: '/',
-            maxAge: 60 * 60 * 24 * 7
+            maxAge: 60 * 60 * 24 * 7,
+            sameSite: "none",
+            secure: true
         })
     },
     logout(state) {
