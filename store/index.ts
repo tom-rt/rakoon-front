@@ -4,6 +4,12 @@ export const state = () => ({
     isConnected: false
 })
 
+export const getters = {
+    getToken: state => {
+        return state.token
+    }
+}
+
 export const mutations = {
     login(state, payload) {
         state.userId = payload.userId;
@@ -31,5 +37,6 @@ export const mutations = {
         state.token = null;
         state.isConnected = false;
         this.$cookies.remove('token')
+        // this.$cookies.clearCookie('token')
     }
 }

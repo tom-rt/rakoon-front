@@ -1,6 +1,6 @@
-export default ({ $axios, store, redirect }) => {
+export default ({ app, $axios, store, redirect }) => {
    $axios.onRequest(config => {
-      config.headers['Authorization'] = 'Bearer ' + store.state.token;
+      config.headers['Authorization'] = 'Bearer ' + store.getters.getToken;
    })
 
    $axios.onResponseError(async err => {
@@ -10,7 +10,7 @@ export default ({ $axios, store, redirect }) => {
             let originalRequest = err.config;
             originalRequest.headers['Authorization'] = 'Bearer ' + refresh.data.token;
             store.commit('setToken', {
-               token: refresh.data.token,
+               token: refresh.data.token
             })
             return $axios(originalRequest);
          } else {
@@ -18,6 +18,10 @@ export default ({ $axios, store, redirect }) => {
             redirect("/login")
          }
       } else {
+         if ((err.response.status == 403) ||
+            (err.response.status == 401 && app.context.route.name != "login")) {
+            redirect("/login")
+         }
          return err
       }
    })

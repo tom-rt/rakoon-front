@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-700 text-gray-100 w-24 border-r fixed">
+  <div class="bg-gray-700 h-full text-gray-100 w-24 border-r fixed">
     <nuxt-link to="/home">
       <div
         v-on:click="highlight('home')"

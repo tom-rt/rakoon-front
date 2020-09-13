@@ -5,7 +5,7 @@
       rel="stylesheet"
     />
     <navbar />
-    <div class="app-container flex flex-row">
+    <div class="app-container flex flex-row w-full h-full">
       <sidebar v-if="this.$store.state.isConnected" />
       <div class="pl-24 flex flex-col">
         <nuxt />
@@ -33,6 +33,5 @@ export default {
 <style>
 .app-container {
   padding-top: 3rem;
-  width: 100%;
 }
 </style>

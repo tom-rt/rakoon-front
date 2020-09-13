@@ -1,6 +1,6 @@
 <template>
-  <div class="flex justify-center w-full">
-    <div class="flex items-center w-full max-w-xs pb-10">
+  <div class="flex justify-center w-full h-full pr-24">
+    <div class="flex items-center w-full max-w-xs pt-24 pb-10">
       <form @submit.prevent="login" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-10">
         <div class="flex w-100 justify-center text-xl mb-4 font-bold">Login</div>
         <div class="mb-4">
@@ -61,7 +61,7 @@ export default {
       canSubmit: false
     };
   },
-  middleware: "authenticated",
+  middleware: "login",
   methods: {
     async login() {
       const login = await this.$axios.post("/user/login", {
