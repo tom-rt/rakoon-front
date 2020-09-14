@@ -10,7 +10,12 @@
         <div
           class="flex flex-col items-center h-auto rounded border-solid border border-white hover:border-gray-300"
         >
-          <img v-if="fd.type == 'directory'" class="w-20" src="../assets/icons/folder.svg" />
+          <img
+            v-on:click="cd(fd.name)"
+            v-if="fd.type == 'directory'"
+            class="w-20"
+            src="../assets/icons/folder.svg"
+          />
           <img
             v-if="fd.type == 'file'"
             class="file-custom mt-2 mr-10 ml-10"
@@ -32,14 +37,16 @@ export default {
     });
     return {
       directoryContent: req.data,
-      basePath: "/rakoon"
+      basePath: "/rakoon",
+      currentPath: ""
     };
   },
   middleware: "authenticated",
   methods: {
-    async getPath() {
+    async cd(target) {
+      this.currentPath = `${this.currentPath}/${target}`;
       const ret = await this.$axios.get(`/list/directory`, {
-        params: { path: "/" }
+        params: { path: this.currentPath }
       });
       this.directoryContent = ret.data;
     }

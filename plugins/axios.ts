@@ -20,6 +20,7 @@ export default ({ app, $axios, store, redirect }) => {
       } else {
          if ((err.response.status == 403) ||
             (err.response.status == 401 && app.context.route.name != "login")) {
+            store.commit("logout")
             redirect("/login")
          }
          return err

@@ -7,7 +7,8 @@ export default function ({ app, store, redirect }) {
         // If the token is not present in the store, but is present in the cookie
         // It happens if the user closes the window and reopens it for example
         if (!cookieToken) {
-            return redirect('/login')
+            store.commit("logout")
+            return redirect("/login")
         } else {
 
             const payload = cookieToken.split(".")[1]
