@@ -15,6 +15,7 @@ export const mutations = {
         state.userId = payload.userId;
         state.token = payload.token;
         state.isConnected = true;
+        console.log("login")
         this.$cookies.set('token', state.token, {
             path: '/',
             maxAge: 60 * 60 * 24 * 7,
@@ -25,6 +26,7 @@ export const mutations = {
     setToken(state, payload) {
         state.token = payload.token;
         state.isConnected = true;
+        console.log("setToken")
         this.$cookies.set('token', state.token, {
             path: '/',
             maxAge: 60 * 60 * 24 * 7,
@@ -37,6 +39,5 @@ export const mutations = {
         state.token = null;
         state.isConnected = false;
         this.$cookies.remove('token')
-        // this.$cookies.clearCookie('token')
     }
 }
