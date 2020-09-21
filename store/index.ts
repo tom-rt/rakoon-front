@@ -34,6 +34,9 @@ export const mutations = {
             secure: true
         })
     },
+    setStoreToken(state, payload) {
+        state.token = payload.token;
+    },
     logout(state) {
         state.userId = null;
         state.token = null;

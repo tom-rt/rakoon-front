@@ -4,7 +4,7 @@ export default async function ({ app, store, redirect, axios }) {
     if (!token) {
         const cookieToken = app.$cookies.get('token')
         if (cookieToken) {
-            store.commit('setToken', {
+            store.commit('setStoreToken', {
                 token: cookieToken
             })
             const refresh = await app.$axios.post('/refresh/token')

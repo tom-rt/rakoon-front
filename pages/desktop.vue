@@ -31,6 +31,7 @@
             src="../assets/icons/folder.svg"
           />
           <img
+            v-on:click="downloadFile()"
             v-if="fd.type == 'file'"
             class="file-custom mt-2 mr-10 ml-10 cursor-pointer"
             src="../assets/icons/document.svg"
@@ -85,6 +86,20 @@ export default {
         });
         this.directoryContent = ret.data;
       }
+    },
+    async downloadFile() {
+      const ret = await this.$axios.get(`/file`, {
+        responseType: "blob"
+      });
+
+      var fileURL = window.URL.createObjectURL(new Blob([ret.data]));
+      var fileLink = document.createElement("a");
+
+      fileLink.href = fileURL;
+      fileLink.setAttribute("download", "main.go");
+      document.body.appendChild(fileLink);
+
+      fileLink.click();
     }
   }
 };
