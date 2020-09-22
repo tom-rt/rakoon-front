@@ -31,7 +31,7 @@
             src="../assets/icons/folder.svg"
           />
           <img
-            v-on:click="downloadFile()"
+            v-on:click="downloadFile(fd.name)"
             v-if="fd.type == 'file'"
             class="file-custom mt-2 mr-10 ml-10 cursor-pointer"
             src="../assets/icons/document.svg"
@@ -87,8 +87,9 @@ export default {
         this.directoryContent = ret.data;
       }
     },
-    async downloadFile() {
+    async downloadFile(fileName) {
       const ret = await this.$axios.get(`/file`, {
+        params: { path: `${this.currentPath}/${fileName}` },
         responseType: "blob"
       });
 
@@ -96,7 +97,7 @@ export default {
       var fileLink = document.createElement("a");
 
       fileLink.href = fileURL;
-      fileLink.setAttribute("download", "main.go");
+      fileLink.setAttribute("download", fileName);
       document.body.appendChild(fileLink);
 
       fileLink.click();
