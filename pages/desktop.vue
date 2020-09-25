@@ -1,21 +1,25 @@
 <template>
   <div class="flex flex-col h-full">
-    <div
-      class="flex items-center pl-4 mt-2 pb-2 h-12 text-2xl border border-l-0 border-t-0 border-r-0"
-    >
-      <img
-        v-on:click="cdHome()"
-        class="w-8 mr-4 p-1 rounded border border-white hover:border-gray-300 cursor-pointer"
-        src="../assets/icons/home.svg"
-      />
-      <img
-        v-on:click="cdPrevious()"
-        class="w-8 mr-4 p-1 rounded border border-white hover:border-gray-300 cursor-pointer"
-        src="../assets/icons/back.svg"
-      />
-      <div>/rakoon{{currentPath}}</div>
+    <div class="fixed bg-white">
+      <div
+        class="flex items-center pl-4 mt-2 pb-2 h-12 text-2xl border border-l-0 border-t-0 border-r-0"
+      >
+        <img
+          v-on:click="cdHome()"
+          class="w-8 mr-4 p-1 rounded border border-white hover:border-gray-300 cursor-pointer"
+          src="../assets/icons/home.svg"
+        />
+        <img
+          v-on:click="cdPrevious()"
+          class="w-8 mr-4 p-1 rounded border border-white hover:border-gray-300 cursor-pointer"
+          src="../assets/icons/back.svg"
+        />
+        <div>/rakoon{{ currentPath }}</div>
+      </div>
     </div>
-    <div class="flex flex-row w-full h-full flex-wrap content-start items-center">
+    <div
+      class="mt-12 flex flex-row w-full h-full flex-wrap content-start items-center"
+    >
       <div
         class="flex flex-col m-4 h-auto w-32 items-center content-start"
         v-for="(fd, idx) in this.directoryContent"
@@ -37,11 +41,14 @@
             src="../assets/icons/document.svg"
           />
           <img
+            v-on:click="downloadFile(fd.name)"
             v-if="fd.type == 'image'"
             class="w-20 cursor-pointer"
             src="../assets/icons/picture.svg"
           />
-          <div class="text-black text-center h-auto mx-6">{{fd.trimmedName}}</div>
+          <div class="text-black text-center h-auto mx-6">
+            {{ fd.trimmedName }}
+          </div>
         </div>
       </div>
     </div>
