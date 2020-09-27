@@ -15,8 +15,9 @@ export default function ({ app, store, redirect }) {
             const decodedPayload = Buffer.from(payload, 'base64').toString()
             const jsonPayload = JSON.parse(decodedPayload)
 
-            store.commit('login', {
+            store.commit("login", {
                 userId: jsonPayload.id,
+                isAdmin: jsonPayload.isAdmin,
                 token: cookieToken
             })
         }

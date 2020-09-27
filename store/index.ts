@@ -1,21 +1,25 @@
 export const state = () => ({
     token: null,
     userId: null,
+    isAdmin: false,
     isConnected: false
 })
 
 export const getters = {
     getToken: state => {
         return state.token
+    },
+    getIsAdmin: state => {
+        return state.isAdmin
     }
 }
 
 export const mutations = {
     login(state, payload) {
         state.userId = payload.userId;
+        state.isAdmin = payload.isAdmin;
         state.token = payload.token;
         state.isConnected = true;
-        console.log("login")
         this.$cookies.set('token', state.token, {
             path: '/',
             maxAge: 60 * 60 * 24 * 7,
@@ -26,7 +30,6 @@ export const mutations = {
     setToken(state, payload) {
         state.token = payload.token;
         state.isConnected = true;
-        console.log("setToken")
         this.$cookies.set('token', state.token, {
             path: '/',
             maxAge: 60 * 60 * 24 * 7,
@@ -40,6 +43,7 @@ export const mutations = {
     logout(state) {
         state.userId = null;
         state.token = null;
+        state.isAdmin = false;
         state.isConnected = false;
         this.$cookies.remove('token')
     }
