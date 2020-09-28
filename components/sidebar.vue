@@ -18,11 +18,11 @@
         Bureau
       </div>
     </nuxt-link>
-    <nuxt-link to="/users">
+    <nuxt-link to="/admin">
       <div
         v-if="this.$store.getters.getIsAdmin"
-        v-on:click="highlight('users')"
-        v-bind:class="{ 'bg-gray-100 text-gray-700 border-r': isUsers }"
+        v-on:click="highlight('admin')"
+        v-bind:class="{ 'bg-gray-100 text-gray-700 border-r': isAdmin }"
         class="flex items-center justify-center text-center h-8 border-b cursor-pointer hover:bg-gray-100 hover:text-gray-700 hover:border-r"
       >
         Admin
@@ -37,7 +37,7 @@ export default {
     return {
       isHome: false,
       isDesktop: false,
-      isUsers: false
+      isAdmin: false
     };
   },
   beforeMount() {
@@ -48,15 +48,15 @@ export default {
       if (tab == "home") {
         this.isHome = true;
         this.isDesktop = false;
-        this.isUsers = false;
+        this.isAdmin = false;
       } else if (tab == "desktop") {
         this.isHome = false;
         this.isDesktop = true;
-        this.isUsers = false;
-      } else if (tab == "users") {
+        this.isAdmin = false;
+      } else if (tab == "admin") {
         this.isHome = false;
         this.isDesktop = false;
-        this.isUsers = true;
+        this.isAdmin = true;
       }
     }
   }
