@@ -53,12 +53,6 @@
           >
             Log in
           </button>
-          <nuxt-link
-            to="/subscribe"
-            class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-            href="#"
-            >No account ?</nuxt-link
-          >
         </div>
       </form>
     </div>

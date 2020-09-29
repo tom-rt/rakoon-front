@@ -47,16 +47,13 @@ export default {
     highlight(tab) {
       if (tab == "home") {
         this.isHome = true;
-        this.isDesktop = false;
-        this.isAdmin = false;
+        this.isDesktop = this.isAdmin = false;
       } else if (tab == "desktop") {
-        this.isHome = false;
         this.isDesktop = true;
-        this.isAdmin = false;
+        this.isHome = this.isAdmin = false;
       } else if (tab == "admin") {
-        this.isHome = false;
-        this.isDesktop = false;
         this.isAdmin = true;
+        this.isHome = this.isDesktop = false;
       }
     }
   }
