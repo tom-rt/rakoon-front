@@ -6,8 +6,7 @@
     />
     <navbar />
     <div class="app-container flex flex-row w-full h-full">
-      <sidebar v-if="this.$store.state.isConnected" />
-      <div class="pl-24 flex flex-col">
+      <div class="pl-32 pr-32 flex flex-col">
         <nuxt />
       </div>
     </div>

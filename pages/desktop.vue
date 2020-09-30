@@ -1,9 +1,7 @@
 <template>
   <div class="flex flex-col h-full">
-    <div class="fixed bg-white">
-      <div
-        class="flex items-center pl-4 mt-2 pb-2 h-12 text-2xl border border-l-0 border-t-0 border-r-0"
-      >
+    <div class="fixed bg-white w-full">
+      <div class="flex items-center pl-4 pb-2 pt-2 h-12 text-2xl">
         <img
           v-on:click="cdHome()"
           class="w-8 mr-4 p-1 rounded border border-white hover:border-gray-300 cursor-pointer"
@@ -18,7 +16,7 @@
       </div>
     </div>
     <div
-      class="mt-12 flex flex-row w-full h-full flex-wrap content-start items-center"
+      class="mt-12 flex flex-row w-full h-full flex-wrap content-start items-center border border-l-0 border-b-0 border-r-0"
     >
       <div
         class="flex flex-col m-4 h-auto w-32 items-center content-start"
