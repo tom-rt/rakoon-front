@@ -245,7 +245,7 @@ export default {
           name: this.newUserPassword,
           password: this.newUserPassword
         });
-        this.clearUserCreation;
+        this.clearUserCreation();
         this.refreshUserList();
       }
     },
@@ -256,7 +256,7 @@ export default {
         const req = await this.$axios.put(`/user/${userId}/password`, {
           password: this.newPassword
         });
-        this.clearPasswordEdit;
+        this.clearPasswordEdit();
         this.refreshUserList();
       }
     },

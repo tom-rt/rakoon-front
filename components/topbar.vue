@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar border-b bg-gray-700 text-gray-100">
+  <div class="topbar border-b bg-gray-700 text-gray-100">
     <div class="flex flex-row content-between w-full">
       <div class="flex justify-start content-center">
         <div class="text-3xl font-extrabold pl-3 w-auto mr-4">Rakoon</div>
@@ -8,7 +8,7 @@
             v-if="this.$store.state.isConnected"
             v-on:click="highlight('home')"
             v-bind:class="{ 'bg-gray-100 text-gray-700 border-r': isHome }"
-            class="flex items-center justify-center text-center cursor-pointer hover:bg-gray-100 hover:text-gray-700 hover:border-r"
+            class="flex items-center justify-center h-full pl-2 pr-2 text-center cursor-pointer hover:bg-gray-100 hover:text-gray-700 hover:border-r"
           >
             Accueil
           </div>
@@ -18,7 +18,7 @@
             v-if="this.$store.state.isConnected"
             v-on:click="highlight('desktop')"
             v-bind:class="{ 'bg-gray-100 text-gray-700 border-r': isDesktop }"
-            class="flex items-center justify-center text-center cursor-pointer hover:bg-gray-100 hover:text-gray-700 hover:border-r"
+            class="flex items-center justify-center h-full pl-2 pr-2 text-center cursor-pointer hover:bg-gray-100 hover:text-gray-700 hover:border-r"
           >
             Bureau
           </div>
@@ -30,7 +30,7 @@
             "
             v-on:click="highlight('admin')"
             v-bind:class="{ 'bg-gray-100 text-gray-700 border-r': isAdmin }"
-            class="flex items-center justify-center text-center cursor-pointer hover:bg-gray-100 hover:text-gray-700 hover:border-r"
+            class="flex items-center justify-center h-full pl-2 pr-2 text-center cursor-pointer hover:bg-gray-100 hover:text-gray-700 hover:border-r"
           >
             Admin
           </div>
@@ -57,6 +57,10 @@ export default {
       isConnected: this.$store.state.isConnected
     };
   },
+  beforeMount() {
+    console.log(this.$router.currentRoute.path.replace("/", ""));
+    this.highlight(this.$router.currentRoute.path.replace("/", ""));
+  },
   methods: {
     async disconnect() {
       await this.$axios.put(`/user/${this.$store.state.userId}/logout`);
@@ -80,7 +84,7 @@ export default {
 </script>
 
 <style>
-.navbar {
+.topbar {
   position: fixed;
   height: 3rem;
   display: flex;

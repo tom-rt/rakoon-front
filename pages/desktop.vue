@@ -1,26 +1,46 @@
 <template>
   <div class="flex flex-col h-full">
-    <div class="fixed bg-white w-full">
-      <div class="flex items-center pl-4 pb-2 pt-2 h-12 text-2xl">
+    <div
+      class="fixed flex flex-row content-start items-center bg-white w-auto top-0 left-0 border ml-8 mt-32 rounded-full bg-green-400 p-4 cursor-pointer"
+    >
+      <img class="w-8" src="../assets/icons/add3.png" />
+    </div>
+
+    <div
+      class="fixed flex flex-row content-start items-center bg-white w-full border border-l-0 border-t-0 border-r-0 pl-32"
+    >
+      <div class="flex pl-4 h-12">
         <img
           v-on:click="cdHome()"
-          class="w-8 mr-4 p-1 rounded border border-white hover:border-gray-300 cursor-pointer"
+          class="w-8 mr-4 mt-2 mb-2 p-1 rounded border border-white hover:border-gray-300 cursor-pointer"
           src="../assets/icons/home.svg"
         />
         <img
           v-on:click="cdPrevious()"
-          class="w-8 mr-4 p-1 rounded border border-white hover:border-gray-300 cursor-pointer"
+          class="w-8 mr-4 mt-2 mb-2 p-1 rounded border border-white hover:border-gray-300 cursor-pointer"
           src="../assets/icons/back.svg"
         />
-        <div>/rakoon{{ currentPath }}</div>
+        <div class="flex w-full justify-between">
+          <div class="w-auto text-base flex items-center">
+            /rakoon{{ currentPath }}
+          </div>
+          <div class="flex w-48 items-center pr-1">
+            <input
+              v-model="filter"
+              class="shadow border rounded border border-gray-500 w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none"
+              type="text"
+              placeholder="Filtrer"
+            />
+          </div>
+        </div>
       </div>
     </div>
     <div
-      class="mt-12 flex flex-row w-full h-full flex-wrap content-start items-center border border-l-0 border-b-0 border-r-0"
+      class="mt-12 pl-32 pr-32 flex flex-row w-full h-full flex-wrap content-start items-center"
     >
       <div
         class="flex flex-col m-4 h-auto w-32 items-center content-start"
-        v-for="(fd, idx) in this.directoryContent"
+        v-for="(fd, idx) in this.filteredContent"
         :key="idx"
       >
         <div
@@ -61,7 +81,9 @@ export default {
     });
     return {
       directoryContent: req.data,
-      currentPath: ""
+      filteredContent: req.data,
+      currentPath: "",
+      filter: ""
     };
   },
   middleware: "authenticated",
@@ -71,14 +93,18 @@ export default {
       const ret = await this.$axios.get(`/list/directory`, {
         params: { path: this.currentPath }
       });
+      this.filter = "";
       this.directoryContent = ret.data;
+      this.filteredContent = ret.data;
     },
     async cdHome() {
       this.currentPath = "";
       const ret = await this.$axios.get(`/list/directory`, {
         params: { path: "" }
       });
+      this.filter = "";
       this.directoryContent = ret.data;
+      this.filteredContent = ret.data;
     },
     async cdPrevious() {
       const idx = this.currentPath.lastIndexOf("/");
@@ -89,7 +115,9 @@ export default {
         const ret = await this.$axios.get(`/list/directory`, {
           params: { path: this.currentPath }
         });
+        this.filter = "";
         this.directoryContent = ret.data;
+        this.filteredContent = ret.data;
       }
     },
     async downloadFile(fileName) {
@@ -106,6 +134,13 @@ export default {
       document.body.appendChild(fileLink);
 
       fileLink.click();
+    }
+  },
+  watch: {
+    filter: function() {
+      this.filteredContent = this.directoryContent.filter(el => {
+        return el.name.toLowerCase().includes(this.filter.toLowerCase());
+      });
     }
   }
 };

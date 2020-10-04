@@ -4,9 +4,9 @@
       href="https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@500&family=Montserrat:wght@200&display=swap"
       rel="stylesheet"
     />
-    <navbar />
+    <topbar />
     <div class="app-container flex flex-row w-full h-full">
-      <div class="pl-32 pr-32 flex flex-col">
+      <div class="flex flex-col">
         <nuxt />
       </div>
     </div>
@@ -14,8 +14,7 @@
 </template>
 
 <script>
-import navbar from "@/components/navbar";
-import sidebar from "@/components/sidebar";
+import topbar from "@/components/topbar";
 export default {
   data() {
     return {
@@ -23,8 +22,7 @@ export default {
     };
   },
   components: {
-    navbar,
-    sidebar
+    topbar
   }
 };
 </script>
