@@ -1,6 +1,6 @@
 <template>
-  <div class="flex justify-center w-full h-full pr-24">
-    <div class="flex items-center w-full max-w-xs pt-24 pb-10">
+  <div class="flex justify-center w-full h-full">
+    <div class="flex items-center w-full max-w-xs pb-56">
       <form
         @submit.prevent="login"
         class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-10"

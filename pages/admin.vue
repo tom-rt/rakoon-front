@@ -1,11 +1,11 @@
 <template>
-  <div class="flex flex-row w-full h-full flex-wrap p-4">
+  <div class="flex flex-row w-full flex-wrap p-4">
     <div class="flex flew-wrap items-start mb-4">
       <div class="text-2xl font-extrabold w-auto mr-4">Utilisateurs</div>
       <button
         v-if="!createUserOpen"
         v-on:click="createUserOpen = true"
-        class="bg-blue-500 hover:bg-blue-700 text-white font-black py-2 px-4 rounded h-full"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-black py-2 px-4 rounded"
       >
         Créer utilisateur
       </button>

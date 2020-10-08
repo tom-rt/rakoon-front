@@ -1,9 +1,38 @@
 <template>
   <div class="flex flex-col h-full">
     <div
+      v-on:click="importOpen = true"
       class="fixed flex flex-row content-start items-center bg-white w-auto top-0 left-0 border ml-8 mt-32 rounded-full bg-green-400 p-4 cursor-pointer"
     >
       <img class="w-8" src="../assets/icons/add3.png" />
+    </div>
+    <div
+      v-if="importOpen"
+      class="fixed flex flex-col content-start items-center bg-white w-64 top-0 left-0 border border-2 border-black ml-16 mt-40 cursor-pointer"
+    >
+      <div
+        class="flex pl-4 bg-gray-700 h-12 content-start items-center text-white font-black"
+      >
+        <div class="w-full">
+          IMPORTER
+        </div>
+        <div
+          v-on:click="importOpen = false"
+          class="w-auto px-2 py-1 mr-1 bg-white text-black border cursor hover:bg-gray-300"
+        >
+          X
+        </div>
+      </div>
+      <div
+        class="flex pl-4 bg-white h-12 content-start items-center font-extrabold hover:bg-gray-300"
+      >
+        Creer un dossier
+      </div>
+      <div
+        class="flex pl-4 bg-white h-12 content-start items-center font-extrabold hover:bg-gray-300"
+      >
+        Importer un fichier
+      </div>
     </div>
 
     <div
@@ -80,6 +109,7 @@ export default {
       params: { path: "/" }
     });
     return {
+      importOpen: false,
       directoryContent: req.data,
       filteredContent: req.data,
       currentPath: "",
