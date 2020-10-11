@@ -36,6 +36,36 @@
     </div>
 
     <div
+      v-if="fileMenuOpen == true"
+      class="fixed flex flex-col content-start mt-64 items-center w-64 border border-2 border-black cursor-pointer"
+    >
+      <div
+        class="flex pl-4 h-12 content-start items-center text-white font-black"
+        :style="menuPos"
+      >
+        <div class="w-full">
+          {{ fileName }}
+        </div>
+        <div
+          v-on:click="fileMenuOpen = false"
+          class="w-auto px-2 py-1 mr-1 bg-white text-black border cursor hover:bg-gray-300"
+        >
+          X
+        </div>
+      </div>
+      <div
+        class="flex pl-4 bg-white h-12 content-start items-center font-extrabold hover:bg-gray-300"
+      >
+        Renommer fichier
+      </div>
+      <div
+        class="flex pl-4 bg-white h-12 content-start items-center font-extrabold hover:bg-gray-300"
+      >
+        Supprimer fichier
+      </div>
+    </div>
+
+    <div
       class="fixed flex flex-row content-start items-center bg-white w-full border border-l-0 border-t-0 border-r-0 pl-32"
     >
       <div class="flex pl-4 h-12">
@@ -82,13 +112,13 @@
             src="../assets/icons/folder.svg"
           />
           <img
-            v-on:click="downloadFile(fd.name)"
+            v-on:click="openFileMenu()"
             v-if="fd.type == 'file'"
             class="file-custom mt-2 mr-10 ml-10 cursor-pointer"
             src="../assets/icons/document.svg"
           />
           <img
-            v-on:click="downloadFile(fd.name)"
+            v-on:click="openFileMenu()"
             v-if="fd.type == 'image'"
             class="w-20 cursor-pointer"
             src="../assets/icons/picture.svg"
@@ -110,13 +140,28 @@ export default {
     });
     return {
       importOpen: false,
+      fileMenuOpen: false,
+      fileName: "",
       directoryContent: req.data,
       filteredContent: req.data,
       currentPath: "",
       filter: ""
     };
   },
+  data() {
+    return {
+      xMenu: "#000000"
+    };
+  },
   middleware: "authenticated",
+  computed: {
+    menuPos() {
+      console.log("menuPos", console.log(this.xMenu));
+      return {
+        "background-color": this.xMenu
+      };
+    }
+  },
   methods: {
     async cd(target) {
       this.currentPath = `${this.currentPath}/${target}`;
@@ -149,6 +194,12 @@ export default {
         this.directoryContent = ret.data;
         this.filteredContent = ret.data;
       }
+    },
+    async openFileMenu(fileName, $event) {
+      this.fileMenuOpen = true;
+      this.importOpen = false;
+      this.fileName = fileName;
+      this.xMenu = event.screenX;
     },
     async downloadFile(fileName) {
       const ret = await this.$axios.get(`/file`, {
