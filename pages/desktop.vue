@@ -1,7 +1,10 @@
 <template>
   <div class="flex flex-col h-full">
     <div
-      v-on:click="importOpen = true"
+      v-on:click="
+        importOpen = true;
+        fileMenuOpen = false;
+      "
       class="fixed flex flex-row content-start items-center bg-white w-auto top-0 left-0 border ml-8 mt-32 rounded-full bg-green-400 p-4 cursor-pointer"
     >
       <img class="w-8" src="../assets/icons/add3.png" />
@@ -14,7 +17,7 @@
         class="flex pl-4 bg-gray-700 h-12 content-start items-center text-white font-black"
       >
         <div class="w-full">
-          IMPORTER
+          Importer :
         </div>
         <div
           v-on:click="importOpen = false"
@@ -37,13 +40,13 @@
 
     <div
       v-if="fileMenuOpen == true"
-      class="fixed flex flex-col content-start mt-64 items-center w-64 border border-2 border-black cursor-pointer"
+      class="fixed flex flex-col content-start items-center w-auto bg-white border border-2 border-black cursor-pointer"
+      v-bind:style="{ top: top + 'px', left: left + 'px' }"
     >
       <div
-        class="flex pl-4 h-12 content-start items-center text-white font-black"
-        :style="menuPos"
+        class="flex pl-4 h-12 content-start items-center text-white font-black bg-gray-700"
       >
-        <div class="w-full">
+        <div class="w-full mr-4">
           {{ fileName }}
         </div>
         <div
@@ -54,12 +57,18 @@
         </div>
       </div>
       <div
-        class="flex pl-4 bg-white h-12 content-start items-center font-extrabold hover:bg-gray-300"
+        v-on:click="downloadFile()"
+        class="flex px-4 bg-white h-12 w-full content-start items-center font-extrabold hover:bg-gray-300"
+      >
+        Télécharger fichier
+      </div>
+      <div
+        class="flex px-4 bg-white h-12 w-full content-start items-center font-extrabold hover:bg-gray-300"
       >
         Renommer fichier
       </div>
       <div
-        class="flex pl-4 bg-white h-12 content-start items-center font-extrabold hover:bg-gray-300"
+        class="flex px-4 bg-white h-12 w-full content-start items-center font-extrabold hover:bg-gray-300"
       >
         Supprimer fichier
       </div>
@@ -112,13 +121,13 @@
             src="../assets/icons/folder.svg"
           />
           <img
-            v-on:click="openFileMenu()"
+            v-on:click="openFileMenu(fd.name)"
             v-if="fd.type == 'file'"
             class="file-custom mt-2 mr-10 ml-10 cursor-pointer"
             src="../assets/icons/document.svg"
           />
           <img
-            v-on:click="openFileMenu()"
+            v-on:click="openFileMenu(fd.name)"
             v-if="fd.type == 'image'"
             class="w-20 cursor-pointer"
             src="../assets/icons/picture.svg"
@@ -145,23 +154,12 @@ export default {
       directoryContent: req.data,
       filteredContent: req.data,
       currentPath: "",
-      filter: ""
-    };
-  },
-  data() {
-    return {
-      xMenu: "#000000"
+      filter: "",
+      top: 0,
+      left: 0
     };
   },
   middleware: "authenticated",
-  computed: {
-    menuPos() {
-      console.log("menuPos", console.log(this.xMenu));
-      return {
-        "background-color": this.xMenu
-      };
-    }
-  },
   methods: {
     async cd(target) {
       this.currentPath = `${this.currentPath}/${target}`;
@@ -199,11 +197,12 @@ export default {
       this.fileMenuOpen = true;
       this.importOpen = false;
       this.fileName = fileName;
-      this.xMenu = event.screenX;
+      this.top = event.pageY;
+      this.left = event.pageX;
     },
-    async downloadFile(fileName) {
+    async downloadFile() {
       const ret = await this.$axios.get(`/file`, {
-        params: { path: `${this.currentPath}/${fileName}` },
+        params: { path: `${this.currentPath}/${this.fileName}` },
         responseType: "blob"
       });
 
@@ -211,10 +210,11 @@ export default {
       var fileLink = document.createElement("a");
 
       fileLink.href = fileURL;
-      fileLink.setAttribute("download", fileName);
+      fileLink.setAttribute("download", this.fileName);
       document.body.appendChild(fileLink);
 
       fileLink.click();
+      this.fileMenuOpen = false;
     }
   },
   watch: {
