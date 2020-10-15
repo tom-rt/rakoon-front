@@ -54,7 +54,7 @@ export default {
       isHome: false,
       isDesktop: false,
       isAdmin: false,
-      isConnected: this.$store.state.isConnected
+      isConnected: this.$store.state.isConnected,
     };
   },
   beforeMount() {
@@ -78,8 +78,8 @@ export default {
         this.isAdmin = true;
         this.isHome = this.isDesktop = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

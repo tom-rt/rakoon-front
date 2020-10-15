@@ -10,6 +10,7 @@
       <img class="w-8" src="../assets/icons/add3.png" />
     </div>
     <div
+      v-click-outside="clearImportMenu"
       v-if="importOpen"
       class="fixed flex flex-col content-start items-center bg-white w-64 top-0 left-0 border border-2 border-black ml-16 mt-40 cursor-pointer"
     >
@@ -17,7 +18,7 @@
         class="flex pl-4 bg-gray-700 h-12 content-start items-center text-white font-black"
       >
         <div class="w-full">
-          Importer :
+          Importer
         </div>
         <div
           v-on:click="importOpen = false"
@@ -26,20 +27,95 @@
           X
         </div>
       </div>
+
       <div
-        class="flex pl-4 bg-white h-12 content-start items-center font-extrabold hover:bg-gray-300"
+        class="flex flex-col bg-white h-auto content-start items-center font-extrabold hover:bg-gray-300"
       >
-        Creer un dossier
-      </div>
-      <div
-        class="flex pl-4 bg-white h-12 content-start items-center font-extrabold hover:bg-gray-300"
-      >
-        Importer un fichier
+        <div
+          class="flex bg-white h-auto content-start items-center font-extrabold hover:bg-gray-300"
+        >
+          <div
+            class="flex flex-col px-4 py-4 bg-white h-auto content-start font-extrabold hover:bg-gray-300"
+            v-on:click="createFolderOpen = true"
+          >
+            Créer un dossier
+            <div
+              v-if="createFolderOpen"
+              class="flex flex-col mt-2 content-start items-center font-extrabold bg-gray-300 border border-gray-500 rounded p-3"
+            >
+              <div class="px-1">
+                <input
+                  v-model="newFolderName"
+                  v-bind:class="{ 'border-red-500': invalidNewFolderName }"
+                  class="flex shadow border rounded text-gray-700 focus:outline-none w-full pl-2"
+                  type="text"
+                  placeholder="Dossier"
+                />
+              </div>
+
+              <div class="flex">
+                <button
+                  v-on:click="createFolder()"
+                  class="bg-blue-500 mt-2 hover:bg-blue-700 text-white font-black py-2 px-4 mr-1 rounded w-full"
+                >
+                  Créer
+                </button>
+                <button
+                  v-on:click.stop="
+                    createFolderOpen = false;
+                    newFolderName = '';
+                  "
+                  class="bg-red-500 mt-2 hover:bg-red-700 text-white font-black py-2 px-4 ml-1 rounded w-full"
+                >
+                  Annuler
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="flex pl-4 py-4 bg-white h-12 content-start items-center font-extrabold hover:bg-gray-300"
+        >
+          Importer un fichier
+        </div>
       </div>
     </div>
 
     <div
-      v-if="fileMenuOpen == true"
+      v-if="folderMenuOpen"
+      v-click-outside="clearFolderMenu"
+      class="fixed flex flex-col content-start items-center w-auto bg-white border border-2 border-black cursor-pointer"
+      v-bind:style="{ top: top + 'px', left: left + 'px' }"
+    >
+      <div
+        class="flex pl-4 h-12 content-start items-center text-white font-black bg-gray-700"
+      >
+        <div class="w-full mr-4">
+          {{ folderName }}
+        </div>
+        <div
+          v-on:click="folderMenu = false"
+          class="w-auto px-2 py-1 mr-1 bg-white text-black border cursor hover:bg-gray-300"
+        >
+          X
+        </div>
+      </div>
+      <div
+        class="flex px-4 bg-white h-12 w-full content-start items-center font-extrabold hover:bg-gray-300"
+      >
+        Renommer
+      </div>
+      <div
+        class="flex px-4 bg-white h-12 w-full content-start items-center font-extrabold hover:bg-gray-300"
+      >
+        Supprimer
+      </div>
+    </div>
+
+    <div
+      v-if="fileMenuOpen"
+      v-click-outside="clearFileMenu"
       class="fixed flex flex-col content-start items-center w-auto bg-white border border-2 border-black cursor-pointer"
       v-bind:style="{ top: top + 'px', left: left + 'px' }"
     >
@@ -60,17 +136,17 @@
         v-on:click="downloadFile()"
         class="flex px-4 bg-white h-12 w-full content-start items-center font-extrabold hover:bg-gray-300"
       >
-        Télécharger fichier
+        Télécharger
       </div>
       <div
         class="flex px-4 bg-white h-12 w-full content-start items-center font-extrabold hover:bg-gray-300"
       >
-        Renommer fichier
+        Renommer
       </div>
       <div
         class="flex px-4 bg-white h-12 w-full content-start items-center font-extrabold hover:bg-gray-300"
       >
-        Supprimer fichier
+        Supprimer
       </div>
     </div>
 
@@ -115,19 +191,22 @@
           class="flex flex-col items-center h-auto rounded border-solid border border-white hover:border-gray-300"
         >
           <img
-            v-on:click="cd(fd.name)"
+            @contextmenu.prevent="openFolderMenu(fd.name)"
+            v-on:dblclick="cd(fd.name)"
             v-if="fd.type == 'directory'"
             class="w-20 cursor-pointer"
             src="../assets/icons/folder.svg"
           />
           <img
-            v-on:click="openFileMenu(fd.name)"
+            @contextmenu.prevent="openFileMenu(fd.name)"
+            v-on:dblclick="downloadFile(fd.name)"
             v-if="fd.type == 'file'"
             class="file-custom mt-2 mr-10 ml-10 cursor-pointer"
             src="../assets/icons/document.svg"
           />
           <img
-            v-on:click="openFileMenu(fd.name)"
+            @contextmenu.prevent="openFileMenu(fd.name)"
+            v-on:dblclick="downloadFile(fd.name)"
             v-if="fd.type == 'image'"
             class="w-20 cursor-pointer"
             src="../assets/icons/picture.svg"
@@ -142,21 +221,28 @@
 </template>
 
 <script>
+import vClickOutside from "v-click-outside";
+
 export default {
   async asyncData(context) {
     const req = await context.app.$axios.get(`/list/directory`, {
-      params: { path: "/" }
+      params: { path: "/" },
     });
     return {
+      invalidNewFolderName: false,
       importOpen: false,
+      createFolderOpen: false,
+      folderMenuOpen: false,
       fileMenuOpen: false,
       fileName: "",
+      folderName: "",
+      newFolderName: "",
       directoryContent: req.data,
       filteredContent: req.data,
       currentPath: "",
       filter: "",
       top: 0,
-      left: 0
+      left: 0,
     };
   },
   middleware: "authenticated",
@@ -164,7 +250,7 @@ export default {
     async cd(target) {
       this.currentPath = `${this.currentPath}/${target}`;
       const ret = await this.$axios.get(`/list/directory`, {
-        params: { path: this.currentPath }
+        params: { path: this.currentPath },
       });
       this.filter = "";
       this.directoryContent = ret.data;
@@ -173,7 +259,7 @@ export default {
     async cdHome() {
       this.currentPath = "";
       const ret = await this.$axios.get(`/list/directory`, {
-        params: { path: "" }
+        params: { path: "" },
       });
       this.filter = "";
       this.directoryContent = ret.data;
@@ -186,24 +272,37 @@ export default {
       } else {
         this.currentPath = this.currentPath.substring(0, idx);
         const ret = await this.$axios.get(`/list/directory`, {
-          params: { path: this.currentPath }
+          params: { path: this.currentPath },
         });
         this.filter = "";
         this.directoryContent = ret.data;
         this.filteredContent = ret.data;
       }
     },
+    async openFolderMenu(folderName, $event) {
+      this.folderMenuOpen = true;
+      this.importOpen = false;
+      this.fileMenuOpen = false;
+      this.folderName = folderName;
+      this.top = event.pageY;
+      this.left = event.pageX;
+    },
     async openFileMenu(fileName, $event) {
+      this.folderMenuOpen = false;
       this.fileMenuOpen = true;
       this.importOpen = false;
       this.fileName = fileName;
       this.top = event.pageY;
       this.left = event.pageX;
     },
-    async downloadFile() {
+    async downloadFile(fileName = null) {
+      if (!fileName) {
+        fileName = this.fileName;
+      }
+
       const ret = await this.$axios.get(`/file`, {
         params: { path: `${this.currentPath}/${this.fileName}` },
-        responseType: "blob"
+        responseType: "blob",
       });
 
       var fileURL = window.URL.createObjectURL(new Blob([ret.data]));
@@ -215,15 +314,51 @@ export default {
 
       fileLink.click();
       this.fileMenuOpen = false;
-    }
+    },
+    async createFolder() {
+      if (this.newFolderName.length == 0) {
+        this.invalidNewFolderName = true;
+      } else {
+        this.invalidNewFolderName = false;
+        const ret = await this.$axios.post(`/folder`, {
+          name: `${this.newFolderName}`,
+          path: `${this.currentPath}/${this.newFolderName}`,
+        });
+        const reload = await this.$axios.get(`/list/directory`, {
+          params: { path: this.currentPath },
+        });
+        this.filter = "";
+        this.directoryContent = reload.data;
+        this.filteredContent = reload.data;
+        this.clearFolderCreation();
+        this.importOpen = false;
+      }
+    },
+    async openFolderCreation() {
+      this.createFolderOpen = true;
+    },
+    async clearImportMenu() {
+      this.clearFolderCreation();
+      this.importOpen = false;
+    },
+    async clearFileMenu() {
+      this.fileMenuOpen = false;
+    },
+    async clearFolderMenu() {
+      this.folderMenuOpen = false;
+    },
+    async clearFolderCreation() {
+      this.newFolderName = "";
+      this.createFolderOpen = false;
+    },
   },
   watch: {
     filter: function() {
-      this.filteredContent = this.directoryContent.filter(el => {
+      this.filteredContent = this.directoryContent.filter((el) => {
         return el.name.toLowerCase().includes(this.filter.toLowerCase());
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
