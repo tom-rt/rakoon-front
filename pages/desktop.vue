@@ -1,10 +1,7 @@
 <template>
   <div class="flex flex-col h-full">
     <div
-      v-on:click="
-        importOpen = true;
-        fileMenuOpen = false;
-      "
+      v-on:click="openImportMenu"
       class="fixed flex flex-row content-start items-center bg-white w-auto top-0 left-0 border ml-8 mt-32 rounded-full bg-green-400 p-4 cursor-pointer"
     >
       <img class="w-8" src="../assets/icons/add3.png" />
@@ -85,7 +82,7 @@
     <div
       v-if="folderMenuOpen"
       v-click-outside="clearFolderMenu"
-      class="fixed flex flex-col content-start items-center w-auto bg-white border border-2 border-black cursor-pointer"
+      class="fixed flex flex-col content-start items-center w-auto h-auto bg-white border border-2 border-black cursor-pointer"
       v-bind:style="{ top: top + 'px', left: left + 'px' }"
     >
       <div
@@ -95,19 +92,54 @@
           {{ folderName }}
         </div>
         <div
-          v-on:click="folderMenu = false"
+          v-on:click="clearFolderMenu()"
           class="w-auto px-2 py-1 mr-1 bg-white text-black border cursor hover:bg-gray-300"
         >
           X
         </div>
       </div>
       <div
-        class="flex px-4 bg-white h-12 w-full content-start items-center font-extrabold hover:bg-gray-300"
+        class="flex flex-col px-4 py-4 bg-white w-full h-auto content-start font-extrabold hover:bg-gray-300"
+        v-on:click="folderRenameOpen = true"
       >
         Renommer
+        <div
+          v-if="folderRenameOpen"
+          class="flex flex-col mt-2 content-start items-center font-extrabold bg-gray-300 border border-gray-500 rounded p-3"
+        >
+          <div class="px-1">
+            <input
+              v-model="folderRename"
+              v-bind:class="{ 'border-red-500': invalidFolderRename }"
+              class="flex shadow border rounded text-gray-700 focus:outline-none w-full pl-2"
+              type="text"
+              placeholder="Dossier"
+            />
+          </div>
+
+          <div class="flex">
+            <button
+              v-on:click.stop="renamePath('folder')"
+              class="bg-blue-500 mt-2 hover:bg-blue-700 text-white font-black py-2 px-4 mr-1 rounded w-full"
+            >
+              Renommer
+            </button>
+            <button
+              v-on:click.stop="
+                folderRenameOpen = false;
+                invalidFolderRename = false;
+                folderRename = '';
+              "
+              class="bg-red-500 mt-2 hover:bg-red-700 text-white font-black py-2 px-4 ml-1 rounded w-full"
+            >
+              Annuler
+            </button>
+          </div>
+        </div>
       </div>
       <div
-        class="flex px-4 bg-white h-12 w-full content-start items-center font-extrabold hover:bg-gray-300"
+        class="flex px-4 py-4 bg-white h-auto w-full content-start items-center font-extrabold hover:bg-gray-300"
+        v-on:click.stop="deletePath('folder')"
       >
         Supprimer
       </div>
@@ -139,12 +171,47 @@
         Télécharger
       </div>
       <div
-        class="flex px-4 bg-white h-12 w-full content-start items-center font-extrabold hover:bg-gray-300"
+        class="flex flex-col px-4 py-4 bg-white w-full h-auto content-start font-extrabold hover:bg-gray-300"
+        v-on:click="fileRenameOpen = true"
       >
         Renommer
+        <div
+          v-if="fileRenameOpen"
+          class="flex flex-col mt-2 content-start items-center font-extrabold bg-gray-300 border border-gray-500 rounded p-3"
+        >
+          <div class="px-1">
+            <input
+              v-model="fileRename"
+              v-bind:class="{ 'border-red-500': invalidFileRename }"
+              class="flex shadow border rounded text-gray-700 focus:outline-none w-full pl-2"
+              type="text"
+              placeholder="Fichier"
+            />
+          </div>
+
+          <div class="flex">
+            <button
+              v-on:click.stop="renamePath('file')"
+              class="bg-blue-500 mt-2 hover:bg-blue-700 text-white font-black py-2 px-4 mr-1 rounded w-full"
+            >
+              Renommer
+            </button>
+            <button
+              v-on:click.stop="
+                fileRenameOpen = false;
+                invalidFileRename = false;
+                fileRename = '';
+              "
+              class="bg-red-500 mt-2 hover:bg-red-700 text-white font-black py-2 px-4 ml-1 rounded w-full"
+            >
+              Annuler
+            </button>
+          </div>
+        </div>
       </div>
       <div
         class="flex px-4 bg-white h-12 w-full content-start items-center font-extrabold hover:bg-gray-300"
+        v-on:click.stop="deletePath('file')"
       >
         Supprimer
       </div>
@@ -226,23 +293,34 @@ import vClickOutside from "v-click-outside";
 export default {
   async asyncData(context) {
     const req = await context.app.$axios.get(`/list/directory`, {
-      params: { path: "/" },
+      params: { path: "/" }
     });
     return {
-      invalidNewFolderName: false,
+      fileMenuOpen: false,
+      fileRenameOpen: false,
+      invalidFileRename: false,
+      fileRename: "",
+
+      folderMenuOpen: false,
+      folderRenameOpen: false,
+      invalidFolderRename: false,
+      folderRename: "",
+
       importOpen: false,
       createFolderOpen: false,
-      folderMenuOpen: false,
-      fileMenuOpen: false,
+      invalidNewFolderName: false,
+      newFolderName: "",
+
       fileName: "",
       folderName: "",
-      newFolderName: "",
+
       directoryContent: req.data,
       filteredContent: req.data,
       currentPath: "",
       filter: "",
+
       top: 0,
-      left: 0,
+      left: 0
     };
   },
   middleware: "authenticated",
@@ -250,7 +328,7 @@ export default {
     async cd(target) {
       this.currentPath = `${this.currentPath}/${target}`;
       const ret = await this.$axios.get(`/list/directory`, {
-        params: { path: this.currentPath },
+        params: { path: this.currentPath }
       });
       this.filter = "";
       this.directoryContent = ret.data;
@@ -259,7 +337,7 @@ export default {
     async cdHome() {
       this.currentPath = "";
       const ret = await this.$axios.get(`/list/directory`, {
-        params: { path: "" },
+        params: { path: "" }
       });
       this.filter = "";
       this.directoryContent = ret.data;
@@ -272,17 +350,26 @@ export default {
       } else {
         this.currentPath = this.currentPath.substring(0, idx);
         const ret = await this.$axios.get(`/list/directory`, {
-          params: { path: this.currentPath },
+          params: { path: this.currentPath }
         });
         this.filter = "";
         this.directoryContent = ret.data;
         this.filteredContent = ret.data;
       }
     },
+    async openImportMenu() {
+      this.importOpen = true;
+      this.fileMenuOpen = false;
+      this.clearFileMenu();
+      this.clearFolderMenu();
+    },
     async openFolderMenu(folderName, $event) {
       this.folderMenuOpen = true;
       this.importOpen = false;
       this.fileMenuOpen = false;
+      this.folderRenameOpen = false;
+      this.folderRename = "";
+      this.invalidFolderRename = false;
       this.folderName = folderName;
       this.top = event.pageY;
       this.left = event.pageX;
@@ -291,6 +378,8 @@ export default {
       this.folderMenuOpen = false;
       this.fileMenuOpen = true;
       this.importOpen = false;
+      this.invalidNewFolderName = false;
+      this.newFolderName = "";
       this.fileName = fileName;
       this.top = event.pageY;
       this.left = event.pageX;
@@ -302,7 +391,7 @@ export default {
 
       const ret = await this.$axios.get(`/file`, {
         params: { path: `${this.currentPath}/${this.fileName}` },
-        responseType: "blob",
+        responseType: "blob"
       });
 
       var fileURL = window.URL.createObjectURL(new Blob([ret.data]));
@@ -322,18 +411,74 @@ export default {
         this.invalidNewFolderName = false;
         const ret = await this.$axios.post(`/folder`, {
           name: `${this.newFolderName}`,
-          path: `${this.currentPath}/${this.newFolderName}`,
+          path: `${this.currentPath}/${this.newFolderName}`
         });
         const reload = await this.$axios.get(`/list/directory`, {
-          params: { path: this.currentPath },
+          params: { path: this.currentPath }
         });
-        this.filter = "";
         this.directoryContent = reload.data;
         this.filteredContent = reload.data;
-        this.clearFolderCreation();
         this.importOpen = false;
+        this.clearFolderCreation();
       }
     },
+    async renamePath(type) {
+      let newName;
+      let originalName;
+
+      if (type == "file") {
+        newName = this.fileRename;
+        originalName = this.fileName;
+      } else if (type == "folder") {
+        newName = this.folderRename;
+        originalName = this.folderName;
+      }
+
+      if (newName.length == 0) {
+        this.invalidFolderRename = true;
+      } else {
+        this.invalidFolderRename = false;
+        const ret = await this.$axios.put(`/path`, {
+          name: `${newName}`,
+          originalPath: `${this.currentPath}/${originalName}`,
+          newPath: `${this.currentPath}/${newName}`
+        });
+        const reload = await this.$axios.get(`/list/directory`, {
+          params: { path: this.currentPath }
+        });
+        this.directoryContent = reload.data;
+        this.filteredContent = reload.data;
+        this.clearFolderMenu();
+        this.clearFileMenu();
+      }
+    },
+    async deletePath(type) {
+      let name;
+
+      if (type == "file") {
+        name = this.fileName;
+      } else if (type == "folder") {
+        name = this.folderName;
+      }
+
+      if (name.length == 0) {
+        this.invalidFolderRename = true;
+      } else {
+        this.invalidFolderRename = false;
+        const payload = { path: `${this.currentPath}/${name}` };
+        const ret = await this.$axios.put(`/delete/path`, {
+          path: `${this.currentPath}/${name}`
+        });
+        const reload = await this.$axios.get(`/list/directory`, {
+          params: { path: this.currentPath }
+        });
+        this.directoryContent = reload.data;
+        this.filteredContent = reload.data;
+        this.clearFolderMenu();
+        this.clearFileMenu();
+      }
+    },
+
     async openFolderCreation() {
       this.createFolderOpen = true;
     },
@@ -343,22 +488,26 @@ export default {
     },
     async clearFileMenu() {
       this.fileMenuOpen = false;
+      this.fileRenameOpen = false;
+      this.fileRename = "";
     },
     async clearFolderMenu() {
       this.folderMenuOpen = false;
+      this.folderRenameOpen = false;
+      this.folderRename = "";
     },
     async clearFolderCreation() {
       this.newFolderName = "";
       this.createFolderOpen = false;
-    },
+    }
   },
   watch: {
     filter: function() {
-      this.filteredContent = this.directoryContent.filter((el) => {
+      this.filteredContent = this.directoryContent.filter(el => {
         return el.name.toLowerCase().includes(this.filter.toLowerCase());
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
