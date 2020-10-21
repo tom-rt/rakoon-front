@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-full">
+  <div class="flex flex-col h-auto">
     <div
       v-on:click="openImportMenu"
       class="fixed flex flex-row content-start items-center bg-white w-auto top-0 left-0 border ml-8 mt-32 rounded-full bg-green-400 p-4 cursor-pointer"
@@ -247,7 +247,7 @@
       </div>
     </div>
     <div
-      class="mt-12 pl-32 pr-32 flex flex-row w-full h-full flex-wrap content-start items-center"
+      class="mt-12 mb-32 px-32 flex flex-row w-full h-full flex-wrap content-start items-center"
     >
       <div
         class="flex flex-col m-4 h-auto w-32 items-center content-start"
@@ -371,8 +371,8 @@ export default {
       this.folderRename = "";
       this.invalidFolderRename = false;
       this.folderName = folderName;
-      this.top = event.pageY;
-      this.left = event.pageX;
+      this.top = event.clientY;
+      this.left = event.clientX;
     },
     async openFileMenu(fileName, $event) {
       this.folderMenuOpen = false;
@@ -381,8 +381,8 @@ export default {
       this.invalidNewFolderName = false;
       this.newFolderName = "";
       this.fileName = fileName;
-      this.top = event.pageY;
-      this.left = event.pageX;
+      this.top = event.clientY;
+      this.left = event.clientX;
     },
     async downloadFile(fileName = null) {
       if (!fileName) {
