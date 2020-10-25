@@ -9,7 +9,7 @@
     <div
       v-click-outside="clearImportMenu"
       v-if="importOpen"
-      class="fixed flex flex-col content-start items-center bg-white w-64 top-0 left-0 border border-2 border-black ml-16 mt-40 cursor-pointer"
+      class="fixed flex flex-col content-start items-center bg-white w-auto top-0 left-0 border border-2 border-black ml-16 mt-40"
     >
       <div
         class="flex pl-4 bg-gray-700 h-12 content-start items-center text-white font-black"
@@ -19,7 +19,7 @@
         </div>
         <div
           v-on:click="importOpen = false"
-          class="w-auto px-2 py-1 mr-1 bg-white text-black border cursor hover:bg-gray-300"
+          class="w-auto px-2 py-1 mr-1 bg-white text-black border cursor hover:bg-gray-300 cursor-pointer"
         >
           X
         </div>
@@ -32,7 +32,7 @@
           class="flex bg-white h-auto content-start items-center font-extrabold hover:bg-gray-300"
         >
           <div
-            class="flex flex-col px-4 py-4 bg-white h-auto content-start font-extrabold hover:bg-gray-300"
+            class="flex flex-col px-4 py-4 bg-white h-auto content-start font-extrabold hover:bg-gray-300 cursor-pointer"
             v-on:click="createFolderOpen = true"
           >
             Créer un dossier
@@ -74,7 +74,30 @@
         <div
           class="flex pl-4 py-4 bg-white h-12 content-start items-center font-extrabold hover:bg-gray-300"
         >
-          Importer un fichier
+          <div class="flex w-auto mr-3">
+            Fichier:
+          </div>
+          <input
+            type="file"
+            id="file"
+            ref="file"
+            v-on:change="handleFileUpload()"
+            multiple
+          />
+          <button
+            v-on:click="submitFile()"
+            v-bind:class="{
+              'cursor-not-allowed': this.files.length === 0,
+              'bg-gray-400': this.files.length === 0,
+              'hover:bg-gray-400': this.files.length === 0,
+              'bg-blue-500': this.files.length != 0,
+              'hover:bg-blue-700': this.files.length != 0
+            }"
+            class="ml-3 text-white font-black py-2 px-4 mr-1 rounded w-auto"
+            :disabled="this.files.length === 0"
+          >
+            Importer
+          </button>
         </div>
       </div>
     </div>
@@ -320,28 +343,46 @@ export default {
       filter: "",
 
       top: 0,
-      left: 0
+      left: 0,
+
+      files: []
     };
   },
   middleware: "authenticated",
   methods: {
-    async cd(target) {
-      this.currentPath = `${this.currentPath}/${target}`;
+    async handleFileUpload() {
+      this.files = this.$refs.file.files;
+    },
+    async submitFile() {
+      let formData;
+      this.clearImportMenu();
+      for (let i = 0; i < this.files.length; i++) {
+        formData = new FormData();
+        formData.append("file", this.files[i]);
+        formData.append("path", this.currentPath);
+        const ret = await this.$axios.post("/file", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        });
+        await this.refreshDirectoryContent(this.currentPath);
+      }
+    },
+    async refreshDirectoryContent(path) {
       const ret = await this.$axios.get(`/list/directory`, {
-        params: { path: this.currentPath }
+        params: { path: path }
       });
       this.filter = "";
       this.directoryContent = ret.data;
       this.filteredContent = ret.data;
     },
+    async cd(target) {
+      this.currentPath = `${this.currentPath}/${target}`;
+      await this.refreshDirectoryContent(this.currentPath);
+    },
     async cdHome() {
       this.currentPath = "";
-      const ret = await this.$axios.get(`/list/directory`, {
-        params: { path: "" }
-      });
-      this.filter = "";
-      this.directoryContent = ret.data;
-      this.filteredContent = ret.data;
+      await this.refreshDirectoryContent("");
     },
     async cdPrevious() {
       const idx = this.currentPath.lastIndexOf("/");
@@ -349,12 +390,7 @@ export default {
         this.cdHome();
       } else {
         this.currentPath = this.currentPath.substring(0, idx);
-        const ret = await this.$axios.get(`/list/directory`, {
-          params: { path: this.currentPath }
-        });
-        this.filter = "";
-        this.directoryContent = ret.data;
-        this.filteredContent = ret.data;
+        await this.refreshDirectoryContent(this.currentPath);
       }
     },
     async openImportMenu() {
