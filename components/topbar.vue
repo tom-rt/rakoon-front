@@ -23,6 +23,16 @@
             Bureau
           </div>
         </nuxt-link>
+        <nuxt-link to="/torrent">
+          <div
+            v-if="this.$store.state.isConnected"
+            v-on:click="highlight('torrent')"
+            v-bind:class="{ 'bg-gray-100 text-gray-700 border-r': isTorrent }"
+            class="flex items-center justify-center h-full pl-2 pr-2 text-center cursor-pointer hover:bg-gray-100 hover:text-gray-700 hover:border-r"
+          >
+            Torrent
+          </div>
+        </nuxt-link>
         <nuxt-link to="/admin">
           <div
             v-if="
@@ -54,7 +64,8 @@ export default {
       isHome: false,
       isDesktop: false,
       isAdmin: false,
-      isConnected: this.$store.state.isConnected,
+      isTorrent: false,
+      isConnected: this.$store.state.isConnected
     };
   },
   beforeMount() {
@@ -68,18 +79,22 @@ export default {
       this.$router.push("/login");
     },
     highlight(tab) {
+      console.log("tab", tab);
       if (tab == "home") {
         this.isHome = true;
-        this.isDesktop = this.isAdmin = false;
+        this.isDesktop = this.isAdmin = this.isTorrent = false;
       } else if (tab == "desktop") {
         this.isDesktop = true;
-        this.isHome = this.isAdmin = false;
+        this.isHome = this.isAdmin = this.isTorrent = false;
       } else if (tab == "admin") {
         this.isAdmin = true;
-        this.isHome = this.isDesktop = false;
+        this.isHome = this.isDesktop = this.isTorrent = false;
+      } else if (tab == "torrent") {
+        this.isTorrent = true;
+        this.isHome = this.isDesktop = this.isAdmin = false;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
