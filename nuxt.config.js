@@ -1,4 +1,5 @@
 export default {
+  target: 'static',
   modules: ["@nuxtjs/tailwindcss", "@nuxtjs/axios", "cookie-universal-nuxt"],
   axios: {
     // baseURL: "http://localhost:8081/v1",
