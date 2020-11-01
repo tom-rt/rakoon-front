@@ -1,5 +1,8 @@
 export default {
   modules: ["@nuxtjs/tailwindcss", "@nuxtjs/axios", "cookie-universal-nuxt"],
+  buildModules: [
+    '@aceforth/nuxt-netlify',
+  ],
   axios: {
     baseURL: "http://5.135.165.57:8081/v1",
   },
