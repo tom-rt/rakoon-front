@@ -15,4 +15,12 @@ export default {
   build: {
     additionalExtensions: ["ts", "tsx"],
   },
+  netlify: {
+    redirects: [
+      {
+        from: '/home',
+        to: '/'
+      },
+    ]
+  }
 };
