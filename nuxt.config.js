@@ -15,8 +15,8 @@ export default {
   netlify: {
     redirects: [
       {
-        from: '/home',
-        to: '/'
+        from: '/',
+        to: '/home'
       },
     ]
   }
