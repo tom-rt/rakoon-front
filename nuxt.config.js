@@ -5,6 +5,7 @@ export default {
   },
   plugins: ["~/plugins/axios.ts", "~/plugins/click-outside.ts"],
   css: [{ src: "~assets/css/style.css", lang: "css" }],
+  buildDir: 'dist',
   build: {
     additionalExtensions: ["ts", "tsx"],
   },

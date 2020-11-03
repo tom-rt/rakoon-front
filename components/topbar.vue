@@ -23,7 +23,7 @@
             Bureau
           </div>
         </nuxt-link>
-        <nuxt-link to="/torrent">
+        <!-- <nuxt-link to="/torrent">
           <div
             v-if="this.$store.state.isConnected"
             v-on:click="highlight('torrent')"
@@ -32,7 +32,7 @@
           >
             Torrent
           </div>
-        </nuxt-link>
+        </nuxt-link> -->
         <nuxt-link to="/admin">
           <div
             v-if="

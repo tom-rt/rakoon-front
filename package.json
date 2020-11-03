@@ -1,5 +1,5 @@
 {
-  "name": "user-service-front",
+  "name": "rakoon-front",
   "version": "1.0.0",
   "description": "My neat Nuxt.js project",
   "author": "Thomas Raout",
@@ -8,7 +8,8 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "heroku-postbuild": "npm run build"
   },
   "dependencies": {
     "@nuxtjs/auth": "^4.9.1",
@@ -16,9 +17,8 @@
     "cookie-universal-nuxt": "^2.1.4",
     "dayjs": "^1.9.1",
     "js-cookie": "^2.2.1",
-    "nuxt": "^2.13.2",
-    "v-click-outside": "^3.1.2",
-    "v-tooltip": "^2.0.3"
+    "nuxt": "^2.14.7",
+    "v-click-outside": "^3.1.2"
   },
   "devDependencies": {
     "@nuxt/typescript-build": "^0.6.0",

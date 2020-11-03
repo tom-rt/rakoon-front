@@ -242,7 +242,7 @@ export default {
 
       if (!this.invalidNewUserName && !this.invalidNewUserPassword) {
         const req = await this.$axios.post(`/user`, {
-          name: this.newUserPassword,
+          name: this.newUserName,
           password: this.newUserPassword
         });
         this.clearUserCreation();

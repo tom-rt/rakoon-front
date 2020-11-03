@@ -1,4 +1,4 @@
-# user-service-front
+# rakoon-front
 
 > My neat Nuxt.js project
 
