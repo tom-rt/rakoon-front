@@ -277,6 +277,11 @@
         v-for="(fd, idx) in this.filteredContent"
         :key="idx"
       >
+        <scale-loader
+          :loading="loading"
+          :color="color"
+          :size="size"
+        ></scale-loader>
         <div
           class="flex flex-col items-center h-auto rounded border-solid border border-white hover:border-gray-300"
         >
@@ -312,6 +317,7 @@
 
 <script>
 import vClickOutside from "v-click-outside";
+import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
 
 export default {
   async asyncData(context) {
@@ -345,8 +351,12 @@ export default {
       top: 0,
       left: 0,
 
-      files: []
+      files: [],
+      color: "#4A5568"
     };
+  },
+  components: {
+    ScaleLoader
   },
   middleware: "authenticated",
   methods: {
@@ -426,7 +436,7 @@ export default {
       }
 
       const ret = await this.$axios.get(`/file`, {
-        params: { path: `${this.currentPath}/${this.fileName}` },
+        params: { path: `${this.currentPath}/${fileName}` },
         responseType: "blob"
       });
 
@@ -434,7 +444,7 @@ export default {
       var fileLink = document.createElement("a");
 
       fileLink.href = fileURL;
-      fileLink.setAttribute("download", this.fileName);
+      fileLink.setAttribute("download", fileName);
       document.body.appendChild(fileLink);
 
       fileLink.click();
@@ -521,6 +531,7 @@ export default {
     async clearImportMenu() {
       this.clearFolderCreation();
       this.importOpen = false;
+      this.files = [];
     },
     async clearFileMenu() {
       this.fileMenuOpen = false;

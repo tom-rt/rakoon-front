@@ -18,7 +18,8 @@
     "dayjs": "^1.9.1",
     "js-cookie": "^2.2.1",
     "nuxt": "^2.14.7",
-    "v-click-outside": "^3.1.2"
+    "v-click-outside": "^3.1.2",
+    "vue-spinner": "^1.0.4"
   },
   "devDependencies": {
     "@nuxt/typescript-build": "^0.6.0",
