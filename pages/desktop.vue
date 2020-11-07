@@ -277,11 +277,6 @@
         v-for="(fd, idx) in this.filteredContent"
         :key="idx"
       >
-        <scale-loader
-          :loading="loading"
-          :color="color"
-          :size="size"
-        ></scale-loader>
         <div
           class="flex flex-col items-center h-auto rounded border-solid border border-white hover:border-gray-300"
         >
@@ -311,13 +306,22 @@
           </div>
         </div>
       </div>
+      <div
+        v-if="this.isFileUploading"
+        class="flex flex-col justify-end items-center w-7r h-6r rounded border-solid border border-white hover:border-gray-300"
+      >
+        <pulse-loader :color="loaderColor" class="w-auto"></pulse-loader>
+        <div class="text-black text-center h-auto mx-6 mt-5">
+          {{ uploadingFileName }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import vClickOutside from "v-click-outside";
-import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 
 export default {
   async asyncData(context) {
@@ -352,11 +356,14 @@ export default {
       left: 0,
 
       files: [],
-      color: "#4A5568"
+
+      loaderColor: "#4A5568",
+      isFileUploading: false,
+      uploadingFileName: ""
     };
   },
   components: {
-    ScaleLoader
+    PulseLoader
   },
   middleware: "authenticated",
   methods: {
@@ -365,18 +372,26 @@ export default {
     },
     async submitFile() {
       let formData;
-      this.clearImportMenu();
+      this.importOpen = false;
       for (let i = 0; i < this.files.length; i++) {
+        if (this.files[i].name.length > 11) {
+          this.uploadingFileName = this.files[i].name.substring(0, 8) + "...";
+        } else {
+          this.uploadingFileName = this.files[i].name;
+        }
         formData = new FormData();
         formData.append("file", this.files[i]);
         formData.append("path", this.currentPath);
+        this.isFileUploading = true;
         const ret = await this.$axios.post("/file", formData, {
           headers: {
             "Content-Type": "multipart/form-data"
           }
         });
+        this.isFileUploading = false;
         await this.refreshDirectoryContent(this.currentPath);
       }
+      this.clearImportMenu();
     },
     async refreshDirectoryContent(path) {
       const ret = await this.$axios.get(`/list/directory`, {
@@ -561,5 +576,13 @@ export default {
 <style>
 .file-custom {
   width: 4.5rem;
+}
+
+.w-7r {
+  width: 7rem;
+}
+
+.h-6r {
+  height: 6.5rem;
 }
 </style>
