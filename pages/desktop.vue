@@ -73,6 +73,14 @@
 
         <div
           class="flex pl-4 py-4 bg-white h-12 content-start items-center font-extrabold hover:bg-gray-300"
+          v-if="this.$store.getters.getCopiedPath.length > 0"
+          v-on:click="pastePath()"
+        >
+          Coller {{ this.$store.getters.getCopiedPathName }}
+        </div>
+
+        <div
+          class="flex pl-4 py-4 bg-white h-12 content-start items-center font-extrabold hover:bg-gray-300"
         >
           <div class="flex w-auto mr-3">
             Fichier:
@@ -166,6 +174,12 @@
       >
         Supprimer
       </div>
+      <div
+        class="flex px-4 py-4 bg-white h-auto w-full content-start items-center font-extrabold hover:bg-gray-300"
+        v-on:click.stop="copyPath(folderName)"
+      >
+        Copier
+      </div>
     </div>
 
     <div
@@ -192,6 +206,12 @@
         class="flex px-4 bg-white h-12 w-full content-start items-center font-extrabold hover:bg-gray-300"
       >
         Télécharger
+      </div>
+      <div
+        v-on:click="copyPath(fileName)"
+        class="flex px-4 bg-white h-12 w-full content-start items-center font-extrabold hover:bg-gray-300"
+      >
+        Copier
       </div>
       <div
         class="flex flex-col px-4 py-4 bg-white w-full h-auto content-start font-extrabold hover:bg-gray-300"
@@ -278,29 +298,98 @@
         :key="idx"
       >
         <div
-          class="flex flex-col items-center h-auto rounded border-solid border border-white hover:border-gray-300"
+          v-if="fd.type == 'directory'"
+          @contextmenu.prevent="openFolderMenu(fd.name)"
+          v-on:dblclick="cd(fd.name)"
+          class="flex flex-col items-center cursor-pointer h-auto rounded border-solid border border-white hover:border-gray-300"
+        >
+          <img class="w-20" src="../assets/icons/folder.svg" />
+          <div class="text-black text-center h-auto mx-6">
+            {{ fd.trimmedName }}
+          </div>
+        </div>
+        <div
+          v-if="fd.type == 'file'"
+          @contextmenu.prevent="openFileMenu(fd.name)"
+          v-on:dblclick="downloadFile(fd.name)"
+          class="flex flex-col items-center h-auto cursor-pointer rounded border-solid border border-white hover:border-gray-300"
         >
           <img
-            @contextmenu.prevent="openFolderMenu(fd.name)"
-            v-on:dblclick="cd(fd.name)"
-            v-if="fd.type == 'directory'"
-            class="w-20 cursor-pointer"
-            src="../assets/icons/folder.svg"
-          />
-          <img
-            @contextmenu.prevent="openFileMenu(fd.name)"
-            v-on:dblclick="downloadFile(fd.name)"
-            v-if="fd.type == 'file'"
-            class="file-custom mt-2 mr-10 ml-10 cursor-pointer"
+            class="file-custom mt-2 mr-10 ml-10"
             src="../assets/icons/document.svg"
           />
+          <div class="text-black text-center h-auto mx-6">
+            {{ fd.trimmedName }}
+          </div>
+        </div>
+
+        <div
+          v-if="fd.type == 'torrent'"
+          @contextmenu.prevent="openFileMenu(fd.name)"
+          v-on:dblclick="downloadFile(fd.name)"
+          class="flex flex-col items-center h-auto cursor-pointer rounded border-solid border border-white hover:border-gray-300"
+        >
           <img
-            @contextmenu.prevent="openFileMenu(fd.name)"
-            v-on:dblclick="downloadFile(fd.name)"
-            v-if="fd.type == 'image'"
-            class="w-20 cursor-pointer"
-            src="../assets/icons/picture.svg"
+            class="file-custom mt-2 mr-10 ml-10"
+            src="../assets/icons/torrent.svg"
           />
+          <div class="text-black text-center h-auto mx-6">
+            {{ fd.trimmedName }}
+          </div>
+        </div>
+
+        <div
+          v-if="fd.type == 'archive'"
+          @contextmenu.prevent="openFileMenu(fd.name)"
+          v-on:dblclick="downloadFile(fd.name)"
+          class="flex flex-col items-center h-auto cursor-pointer rounded border-solid border border-white hover:border-gray-300"
+        >
+          <img
+            class="file-custom mt-2 mr-10 ml-10"
+            src="../assets/icons/archive.svg"
+          />
+          <div class="text-black text-center h-auto mx-6">
+            {{ fd.trimmedName }}
+          </div>
+        </div>
+
+        <div
+          v-if="fd.type == 'pdf'"
+          @contextmenu.prevent="openFileMenu(fd.name)"
+          v-on:dblclick="downloadFile(fd.name)"
+          class="flex flex-col items-center h-auto cursor-pointer rounded border-solid border border-white hover:border-gray-300"
+        >
+          <img
+            class="file-custom mt-2 mr-10 ml-10"
+            src="../assets/icons/pdf.svg"
+          />
+          <div class="text-black text-center h-auto mx-6">
+            {{ fd.trimmedName }}
+          </div>
+        </div>
+
+        <div
+          v-if="fd.type == 'video'"
+          @contextmenu.prevent="openFileMenu(fd.name)"
+          v-on:dblclick="downloadFile(fd.name)"
+          class="flex flex-col items-center h-auto cursor-pointer rounded border-solid border border-white hover:border-gray-300"
+        >
+          <img
+            class="file-custom mt-2 mr-10 ml-10"
+            src="../assets/icons/video.svg"
+          />
+          <div class="text-black text-center h-auto mx-6">
+            {{ fd.trimmedName }}
+          </div>
+        </div>
+
+        <div
+          v-if="fd.type == 'image'"
+          @contextmenu.prevent="openFileMenu(fd.name)"
+          v-on:dblclick="downloadFile(fd.name)"
+          class="flex flex-col items-center h-auto cursor-pointer rounded border-solid border border-white hover:border-gray-300"
+        >
+          <img class="w-20" src="../assets/icons/picture.svg" />
           <div class="text-black text-center h-auto mx-6">
             {{ fd.trimmedName }}
           </div>
@@ -310,8 +399,8 @@
         v-if="this.isFileUploading"
         class="flex flex-col justify-end items-center w-7r h-6r rounded border-solid border border-white hover:border-gray-300"
       >
-        <pulse-loader :color="loaderColor" class="w-auto"></pulse-loader>
-        <div class="text-black text-center h-auto mx-6 mt-5">
+        <scale-loader :color="loaderColor" class="w-auto"></scale-loader>
+        <div class="text-black text-center h-auto mx-6 mt-3">
           {{ uploadingFileName }}
         </div>
       </div>
@@ -321,7 +410,7 @@
 
 <script>
 import vClickOutside from "v-click-outside";
-import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
 
 export default {
   async asyncData(context) {
@@ -363,7 +452,7 @@ export default {
     };
   },
   components: {
-    PulseLoader
+    ScaleLoader
   },
   middleware: "authenticated",
   methods: {
@@ -482,6 +571,21 @@ export default {
         this.importOpen = false;
         this.clearFolderCreation();
       }
+    },
+    async copyPath(name) {
+      this.$store.commit("setCopiedPathName", name);
+      this.$store.commit("setCopiedPath", `${this.currentPath}/${name}`);
+      this.clearFolderMenu();
+      this.clearFileMenu();
+    },
+    async pastePath() {
+      this.clearImportMenu();
+      const ret = await this.$axios.put(`/copy/path`, {
+        sourceName: this.$store.getters.getCopiedPathName,
+        sourcePath: this.$store.getters.getCopiedPath,
+        targetPath: this.currentPath
+      });
+      this.refreshDirectoryContent(this.currentPath);
     },
     async renamePath(type) {
       let newName;
