@@ -14,9 +14,7 @@
       <div
         class="flex pl-4 bg-gray-700 h-12 content-start items-center text-white font-black"
       >
-        <div class="w-full">
-          Importer
-        </div>
+        <div class="w-full">Importer</div>
         <div
           v-on:click="importOpen = false"
           class="w-auto px-2 py-1 mr-1 bg-white text-black border cursor hover:bg-gray-300 cursor-pointer"
@@ -82,9 +80,7 @@
         <div
           class="flex pl-4 py-4 bg-white h-12 content-start items-center font-extrabold hover:bg-gray-300"
         >
-          <div class="flex w-auto mr-3">
-            Fichier:
-          </div>
+          <div class="flex w-auto mr-3">Fichier:</div>
           <input
             type="file"
             id="file"
@@ -99,7 +95,7 @@
               'bg-gray-400': this.files.length === 0,
               'hover:bg-gray-400': this.files.length === 0,
               'bg-blue-500': this.files.length != 0,
-              'hover:bg-blue-700': this.files.length != 0
+              'hover:bg-blue-700': this.files.length != 0,
             }"
             class="ml-3 text-white font-black py-2 px-4 mr-1 rounded w-auto"
             :disabled="this.files.length === 0"
@@ -300,8 +296,8 @@
         <div
           v-if="fd.type == 'directory'"
           @contextmenu.prevent="openFolderMenu(fd.name)"
-          v-on:dblclick="cd(fd.name)"
-          class="flex flex-col items-center cursor-pointer h-auto rounded border-solid border border-white hover:border-gray-300"
+          v-on:click="cd(fd.name)"
+          class="flex flex-col items-center cursor-pointer h-auto w-40 rounded border-solid border border-white hover:border-gray-300"
         >
           <img class="w-20" src="../assets/icons/folder.svg" />
           <div class="text-black text-center h-auto mx-6">
@@ -312,7 +308,7 @@
           v-if="fd.type == 'file'"
           @contextmenu.prevent="openFileMenu(fd.name)"
           v-on:dblclick="downloadFile(fd.name)"
-          class="flex flex-col items-center h-auto cursor-pointer rounded border-solid border border-white hover:border-gray-300"
+          class="flex flex-col items-center h-auto w-40 cursor-pointer rounded border-solid border border-white hover:border-gray-300"
         >
           <img
             class="file-custom mt-2 mr-10 ml-10"
@@ -327,7 +323,7 @@
           v-if="fd.type == 'torrent'"
           @contextmenu.prevent="openFileMenu(fd.name)"
           v-on:dblclick="downloadFile(fd.name)"
-          class="flex flex-col items-center h-auto cursor-pointer rounded border-solid border border-white hover:border-gray-300"
+          class="flex flex-col items-center h-auto w-40 cursor-pointer rounded border-solid border border-white hover:border-gray-300"
         >
           <img
             class="file-custom mt-2 mr-10 ml-10"
@@ -342,7 +338,7 @@
           v-if="fd.type == 'archive'"
           @contextmenu.prevent="openFileMenu(fd.name)"
           v-on:dblclick="downloadFile(fd.name)"
-          class="flex flex-col items-center h-auto cursor-pointer rounded border-solid border border-white hover:border-gray-300"
+          class="flex flex-col items-center h-auto w-40 cursor-pointer rounded border-solid border border-white hover:border-gray-300"
         >
           <img
             class="file-custom mt-2 mr-10 ml-10"
@@ -357,7 +353,7 @@
           v-if="fd.type == 'pdf'"
           @contextmenu.prevent="openFileMenu(fd.name)"
           v-on:dblclick="downloadFile(fd.name)"
-          class="flex flex-col items-center h-auto cursor-pointer rounded border-solid border border-white hover:border-gray-300"
+          class="flex flex-col items-center h-auto w-40 cursor-pointer rounded border-solid border border-white hover:border-gray-300"
         >
           <img
             class="file-custom mt-2 mr-10 ml-10"
@@ -372,7 +368,7 @@
           v-if="fd.type == 'video'"
           @contextmenu.prevent="openFileMenu(fd.name)"
           v-on:dblclick="downloadFile(fd.name)"
-          class="flex flex-col items-center h-auto cursor-pointer rounded border-solid border border-white hover:border-gray-300"
+          class="flex flex-col items-center h-auto w-40 cursor-pointer rounded border-solid border border-white hover:border-gray-300"
         >
           <img
             class="file-custom mt-2 mr-10 ml-10"
@@ -387,7 +383,7 @@
           v-if="fd.type == 'image'"
           @contextmenu.prevent="openFileMenu(fd.name)"
           v-on:dblclick="downloadFile(fd.name)"
-          class="flex flex-col items-center h-auto cursor-pointer rounded border-solid border border-white hover:border-gray-300"
+          class="flex flex-col items-center h-auto w-40 cursor-pointer rounded border-solid border border-white hover:border-gray-300"
         >
           <img class="w-20" src="../assets/icons/picture.svg" />
           <div class="text-black text-center h-auto mx-6">
@@ -396,12 +392,13 @@
         </div>
       </div>
       <div
-        v-if="this.isFileUploading"
-        class="flex flex-col justify-end items-center w-7r h-6r rounded border-solid border border-white hover:border-gray-300"
+        v-for="(fileName, idx) in this.uploadingFiles"
+        :key="idx + 'upload'"
+        class="flex flex-col justify-end items-center w-40 h-6r rounded border-solid border border-white hover:border-gray-300 m-4"
       >
         <scale-loader :color="loaderColor" class="w-auto"></scale-loader>
         <div class="text-black text-center h-auto mx-6 mt-3">
-          {{ uploadingFileName }}
+          {{ fileName }}
         </div>
       </div>
     </div>
@@ -415,7 +412,7 @@ import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
 export default {
   async asyncData(context) {
     const req = await context.app.$axios.get(`/list/directory`, {
-      params: { path: "/" }
+      params: { path: "/" },
     });
     return {
       fileMenuOpen: false,
@@ -447,12 +444,11 @@ export default {
       files: [],
 
       loaderColor: "#4A5568",
-      isFileUploading: false,
-      uploadingFileName: ""
+      uploadingFiles: [],
     };
   },
   components: {
-    ScaleLoader
+    ScaleLoader,
   },
   middleware: "authenticated",
   methods: {
@@ -461,34 +457,46 @@ export default {
     },
     async submitFile() {
       let formData;
+      let uploadingFileName;
+      let requests = [];
       this.importOpen = false;
       for (let i = 0; i < this.files.length; i++) {
-        if (this.files[i].name.length > 11) {
-          this.uploadingFileName = this.files[i].name.substring(0, 8) + "...";
+        if (this.files[i].name.length > 15) {
+          uploadingFileName = this.files[i].name.substring(0, 13) + "...";
         } else {
-          this.uploadingFileName = this.files[i].name;
+          uploadingFileName = this.files[i].name;
         }
+        this.$store.commit("addToUploadQueue", {
+          path: this.currentPath,
+          fileName: uploadingFileName,
+        });
         formData = new FormData();
         formData.append("file", this.files[i]);
         formData.append("path", this.currentPath);
-        this.isFileUploading = true;
-        const ret = await this.$axios.post("/file", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        });
-        this.isFileUploading = false;
-        await this.refreshDirectoryContent(this.currentPath);
+        requests.push(
+          this.$axios.post("/file", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+        );
       }
       this.clearImportMenu();
+      this.uploadingFiles =
+        this.$store.getters.getUploadQueue[this.currentPath] || [];
+      const resps = await Promise.all(requests);
+      this.$store.commit("clearUploadQueue", `${this.currentPath}`);
+      await this.refreshDirectoryContent(this.currentPath);
     },
     async refreshDirectoryContent(path) {
       const ret = await this.$axios.get(`/list/directory`, {
-        params: { path: path }
+        params: { path: path },
       });
       this.filter = "";
       this.directoryContent = ret.data;
       this.filteredContent = ret.data;
+      this.uploadingFiles =
+        this.$store.getters.getUploadQueue[this.currentPath] || [];
     },
     async cd(target) {
       this.currentPath = `${this.currentPath}/${target}`;
@@ -541,7 +549,7 @@ export default {
 
       const ret = await this.$axios.get(`/file`, {
         params: { path: `${this.currentPath}/${fileName}` },
-        responseType: "blob"
+        responseType: "blob",
       });
 
       var fileURL = window.URL.createObjectURL(new Blob([ret.data]));
@@ -561,10 +569,10 @@ export default {
         this.invalidNewFolderName = false;
         const ret = await this.$axios.post(`/folder`, {
           name: `${this.newFolderName}`,
-          path: `${this.currentPath}/${this.newFolderName}`
+          path: `${this.currentPath}/${this.newFolderName}`,
         });
         const reload = await this.$axios.get(`/list/directory`, {
-          params: { path: this.currentPath }
+          params: { path: this.currentPath },
         });
         this.directoryContent = reload.data;
         this.filteredContent = reload.data;
@@ -583,7 +591,7 @@ export default {
       const ret = await this.$axios.put(`/copy/path`, {
         sourceName: this.$store.getters.getCopiedPathName,
         sourcePath: this.$store.getters.getCopiedPath,
-        targetPath: this.currentPath
+        targetPath: this.currentPath,
       });
       this.refreshDirectoryContent(this.currentPath);
     },
@@ -606,10 +614,10 @@ export default {
         const ret = await this.$axios.put(`/path`, {
           name: `${newName}`,
           originalPath: `${this.currentPath}/${originalName}`,
-          newPath: `${this.currentPath}/${newName}`
+          newPath: `${this.currentPath}/${newName}`,
         });
         const reload = await this.$axios.get(`/list/directory`, {
-          params: { path: this.currentPath }
+          params: { path: this.currentPath },
         });
         this.directoryContent = reload.data;
         this.filteredContent = reload.data;
@@ -632,10 +640,10 @@ export default {
         this.invalidFolderRename = false;
         const payload = { path: `${this.currentPath}/${name}` };
         const ret = await this.$axios.put(`/delete/path`, {
-          path: `${this.currentPath}/${name}`
+          path: `${this.currentPath}/${name}`,
         });
         const reload = await this.$axios.get(`/list/directory`, {
-          params: { path: this.currentPath }
+          params: { path: this.currentPath },
         });
         this.directoryContent = reload.data;
         this.filteredContent = reload.data;
@@ -665,15 +673,15 @@ export default {
     async clearFolderCreation() {
       this.newFolderName = "";
       this.createFolderOpen = false;
-    }
+    },
   },
   watch: {
-    filter: function() {
-      this.filteredContent = this.directoryContent.filter(el => {
+    filter: function () {
+      this.filteredContent = this.directoryContent.filter((el) => {
         return el.name.toLowerCase().includes(this.filter.toLowerCase());
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

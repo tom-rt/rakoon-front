@@ -65,11 +65,10 @@ export default {
       isDesktop: false,
       isAdmin: false,
       isTorrent: false,
-      isConnected: this.$store.state.isConnected
+      isConnected: this.$store.state.isConnected,
     };
   },
-  beforeMount() {
-    console.log(this.$router.currentRoute.path.replace("/", ""));
+  mounted() {
     this.highlight(this.$router.currentRoute.path.replace("/", ""));
   },
   methods: {
@@ -79,8 +78,7 @@ export default {
       this.$router.push("/login");
     },
     highlight(tab) {
-      console.log("tab", tab);
-      if (tab == "home") {
+      if (tab == "home" || tab == "login") {
         this.isHome = true;
         this.isDesktop = this.isAdmin = this.isTorrent = false;
       } else if (tab == "desktop") {
@@ -93,8 +91,8 @@ export default {
         this.isTorrent = true;
         this.isHome = this.isDesktop = this.isAdmin = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

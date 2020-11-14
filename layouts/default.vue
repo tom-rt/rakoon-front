@@ -18,12 +18,18 @@ import topbar from "@/components/topbar";
 export default {
   data() {
     return {
-      isConnected: this.$store.state.isConnected
+      isConnected: this.$store.state.isConnected,
+    };
+  },
+
+  head() {
+    return {
+      titleTemplate: "Rakoon",
     };
   },
   components: {
-    topbar
-  }
+    topbar,
+  },
 };
 </script>
 

@@ -17,4 +17,9 @@ export default {
   build: {
     additionalExtensions: ["ts", "tsx"],
   },
+  link: [{ rel: 'icon', type: 'image/x-icon', href: 'favicon.ico' }],
+  loading: {
+    color: "#80b918",
+    height: "2px",
+  },
 };
