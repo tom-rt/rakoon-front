@@ -4,7 +4,7 @@
   >
     <div class="flex w-full h-12 bg-gray-700 border items-center px-2">
       <div class="text-gray-100 text-sm">
-        {{ this.$store.getters.geCurrentUploadsNumber }} fichiers en cours
+        {{ this.$store.getters.geCurrentUploadsNumber }} fichier(s) en cours
         d'import
       </div>
       <pulse-loader
@@ -14,7 +14,6 @@
         class="w-10"
       ></pulse-loader>
     </div>
-    <!-- <div class="w-full h-12"></div> -->
   </div>
 </template>
 
