@@ -485,7 +485,10 @@ export default {
       this.uploadingFiles =
         this.$store.getters.getUploadQueue[this.currentPath] || [];
       const resps = await Promise.all(requests);
-      this.$store.commit("clearUploadQueue", `${this.currentPath}`);
+      this.$store.commit("clearUploadQueue", {
+        path: this.currentPath,
+        uploads: resps,
+      });
       await this.refreshDirectoryContent(this.currentPath);
     },
     async refreshDirectoryContent(path) {

@@ -6,6 +6,7 @@ export const state = () => ({
   copiedPath: "",
   copiedPathName: "",
   uploadQueue: {},
+  currentUploadsNumber: 0
 });
 
 export const getters = {
@@ -26,6 +27,9 @@ export const getters = {
   },
   getUploadQueue: (state) => {
     return state.uploadQueue;
+  },
+  geCurrentUploadsNumber: (state) => {
+    return state.currentUploadsNumber;
   },
 };
 
@@ -61,14 +65,20 @@ export const mutations = {
   setCopiedPathName(state, name) {
     state.copiedPathName = name;
   },
-  clearUploadQueue(state, index) {
-    state.uploadQueue[index] = [];
+  clearUploadQueue(state, payload) {
+    const idx = payload.path
+    const uploads = payload.uploads
+    for (let i = 0; i < uploads.length; i++) {
+      state.uploadQueue[idx].splice(state.uploadQueue[idx].indexOf(uploads[i]), 1);
+      state.currentUploadsNumber--;
+    }
   },
   addToUploadQueue(state, uploadPayload) {
     if (!(uploadPayload.path in state.uploadQueue)) {
       state.uploadQueue[uploadPayload.path] = [];
     }
     state.uploadQueue[uploadPayload.path].push(uploadPayload.fileName);
+    state.currentUploadsNumber++;
   },
   logout(state) {
     state.userId = null;

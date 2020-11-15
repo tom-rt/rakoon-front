@@ -9,12 +9,14 @@
       <div class="flex flex-col">
         <nuxt />
       </div>
+      <uploadQueue v-if="this.$store.getters.geCurrentUploadsNumber > 0" />
     </div>
   </div>
 </template>
 
 <script>
 import topbar from "@/components/topbar";
+import uploadQueue from "@/components/uploadQueue";
 export default {
   data() {
     return {
@@ -29,6 +31,7 @@ export default {
   },
   components: {
     topbar,
+    uploadQueue,
   },
 };
 </script>
