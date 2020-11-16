@@ -433,8 +433,8 @@ export default {
       fileName: "",
       folderName: "",
 
-      directoryContent: req.data,
-      filteredContent: req.data,
+      directoryContent: req.data || [],
+      filteredContent: req.data || [],
       currentPath: "",
       filter: "",
 
@@ -496,14 +496,17 @@ export default {
         params: { path: path },
       });
       this.filter = "";
-      this.directoryContent = ret.data;
-      this.filteredContent = ret.data;
-      this.uploadingFiles =
-        this.$store.getters.getUploadQueue[this.currentPath] || [];
+      this.directoryContent = ret.data || [];
+      this.filteredContent = ret.data || [];
+      this.uploadingFiles = this.$store.getters.getUploadQueue[path] || [];
+      // this.uploadingFiles =
+      //   this.$store.getters.getUploadQueue[this.currentPath] || [];
     },
     async cd(target) {
+      const ret = await this.refreshDirectoryContent(
+        `${this.currentPath}/${target}`
+      );
       this.currentPath = `${this.currentPath}/${target}`;
-      await this.refreshDirectoryContent(this.currentPath);
     },
     async cdHome() {
       this.currentPath = "";
@@ -550,9 +553,9 @@ export default {
         fileName = this.fileName;
       }
 
-      const ret = await this.$axios.get(`/file`, {
+      const { ret, headers } = await this.$axios.get(`/file`, {
         params: { path: `${this.currentPath}/${fileName}` },
-        responseType: "blob",
+        responseType: "stream",
       });
 
       var fileURL = window.URL.createObjectURL(new Blob([ret.data]));

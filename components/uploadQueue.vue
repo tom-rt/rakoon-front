@@ -8,7 +8,6 @@
         d'import
       </div>
       <pulse-loader
-        :loading="loading"
         :color="loaderColor"
         :size="loaderSize"
         class="w-10"
