@@ -198,7 +198,7 @@
         </div>
       </div>
       <div
-        v-on:click="downloadFile()"
+        v-on:click="downloadFileStream()"
         class="flex px-4 bg-white h-12 w-full content-start items-center font-extrabold hover:bg-gray-300"
       >
         Télécharger
@@ -408,6 +408,13 @@
 <script>
 import vClickOutside from "v-click-outside";
 import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
+import url from "url";
+import { WritableStream } from "web-streams-polyfill/ponyfill";
+// import streamSaver from "streamsaver";
+import streamSaver from "streamsaver";
+// import streamSaver from "streamsaver";
+// const streamSaver = require("streamsaver");
+// const streamSaver = window.streamSaver;
 
 export default {
   async asyncData(context) {
@@ -549,13 +556,15 @@ export default {
       this.left = event.clientX;
     },
     async downloadFile(fileName = null) {
+      console.log("LA");
+
       if (!fileName) {
         fileName = this.fileName;
       }
 
-      const { ret, headers } = await this.$axios.get(`/file`, {
+      const ret = await this.$axios.get(`/file`, {
         params: { path: `${this.currentPath}/${fileName}` },
-        responseType: "stream",
+        responseType: "blob",
       });
 
       var fileURL = window.URL.createObjectURL(new Blob([ret.data]));
@@ -567,6 +576,78 @@ export default {
 
       fileLink.click();
       this.fileMenuOpen = false;
+    },
+    async downloadFileStream(fileName = null) {
+      if (!fileName) {
+        fileName = this.fileName;
+      }
+
+      const refresh = await this.$axios.post("/refresh/token");
+      const token = refresh.data.token;
+      console.log(token);
+
+      var url = new URL("https://api.rakoon.tech:443/v1/file");
+      // var url = new URL("http://localhost:8081/v1/file");
+
+      var params = { path: `${this.currentPath}/${fileName}` };
+
+      url.search = new URLSearchParams(params).toString();
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: new Headers({
+          Authorization: "Bearer " + token,
+        }),
+      });
+
+      // If the WritableStream is not available (Firefox, Safari), take it from the ponyfill
+
+      // const fileStream = streamSaver.createWriteStream(fileName);
+      // const readableStream = response.body;
+
+      // // More optimized
+      // if (readableStream.pipeTo) {
+      //   return readableStream.pipeTo(fileStream);
+      // }
+
+      // window.writer = fileStream.getWriter();
+
+      // const reader = response.body.getReader();
+      // const pump = () =>
+      //   reader
+      //     .read()
+      //     .then((res) =>
+      //       res.done ? writer.close() : writer.write(res.value).then(pump)
+      //     );
+
+      // pump();
+
+      if (!window.WritableStream) {
+        streamSaver.WritableStream = WritableStream;
+        window.WritableStream = WritableStream;
+      }
+
+      const fileStream = streamSaver.createWriteStream(fileName);
+      const readableStream = response.body;
+
+      // more optimized
+      if (readableStream.pipeTo) {
+        return readableStream
+          .pipeTo(fileStream)
+          .then(() => console.log("done writing"));
+      }
+
+      window.writer = fileStream.getWriter();
+
+      const reader = res.body.getReader();
+      const pump = () =>
+        reader
+          .read()
+          .then((res) =>
+            res.done ? writer.close() : writer.write(res.value).then(pump)
+          );
+
+      pump();
     },
     async createFolder() {
       if (this.newFolderName.length == 0) {

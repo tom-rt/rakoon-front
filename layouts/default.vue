@@ -7,7 +7,9 @@
     <topbar />
     <div class="app-container flex flex-row w-full h-full">
       <div class="flex flex-col">
-        <nuxt />
+        <client-only>
+          <nuxt />
+        </client-only>
       </div>
       <uploadQueue v-if="this.$store.getters.geCurrentUploadsNumber > 0" />
     </div>

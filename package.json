@@ -19,8 +19,11 @@
     "js-cookie": "^2.2.1",
     "nuxt": "^2.14.7",
     "redirect-ssl": "^2.0.0",
+    "streamsaver": "^2.0.5",
+    "url": "^0.11.0",
     "v-click-outside": "^3.1.2",
-    "vue-spinner": "^1.0.4"
+    "vue-spinner": "^1.0.4",
+    "web-streams-polyfill": "^3.0.1"
   },
   "devDependencies": {
     "@nuxt/typescript-build": "^0.6.0",
