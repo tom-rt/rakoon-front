@@ -198,7 +198,7 @@
         </div>
       </div>
       <div
-        v-on:click="downloadFileStream()"
+        v-on:click="downloadFile()"
         class="flex px-4 bg-white h-12 w-full content-start items-center font-extrabold hover:bg-gray-300"
       >
         Télécharger
@@ -408,13 +408,9 @@
 <script>
 import vClickOutside from "v-click-outside";
 import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
-import url from "url";
-import { WritableStream } from "web-streams-polyfill/ponyfill";
+// import url from "url";
+// import { WritableStream } from "web-streams-polyfill/ponyfill";
 // import streamSaver from "streamsaver";
-import streamSaver from "streamsaver";
-// import streamSaver from "streamsaver";
-// const streamSaver = require("streamsaver");
-// const streamSaver = window.streamSaver;
 
 export default {
   async asyncData(context) {
@@ -556,8 +552,6 @@ export default {
       this.left = event.clientX;
     },
     async downloadFile(fileName = null) {
-      console.log("LA");
-
       if (!fileName) {
         fileName = this.fileName;
       }
