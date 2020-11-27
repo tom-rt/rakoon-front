@@ -1,12 +1,15 @@
+export const strict = false;
+
 export const state = () => ({
   token: null,
   userId: null,
   isAdmin: false,
   isConnected: false,
+  toast: false,
   copiedPath: "",
   copiedPathName: "",
   uploadQueue: {},
-  currentUploadsNumber: 0
+  currentUploadsNumber: 0,
 });
 
 export const getters = {
@@ -28,7 +31,10 @@ export const getters = {
   getUploadQueue: (state) => {
     return state.uploadQueue;
   },
-  geCurrentUploadsNumber: (state) => {
+  getToast: (state) => {
+    return state.toast;
+  },
+  getCurrentUploadsNumber: (state) => {
     return state.currentUploadsNumber;
   },
 };
@@ -45,6 +51,12 @@ export const mutations = {
       sameSite: "none",
       secure: true,
     });
+  },
+  showToast(state) {
+    state.toast = true;
+    setTimeout(function() {
+      state.toast = false;
+    }, 3000);
   },
   setToken(state, payload) {
     state.token = payload.token;
@@ -66,10 +78,13 @@ export const mutations = {
     state.copiedPathName = name;
   },
   clearUploadQueue(state, payload) {
-    const idx = payload.path
-    const uploads = payload.uploads
+    const idx = payload.path;
+    const uploads = payload.uploads;
     for (let i = 0; i < uploads.length; i++) {
-      state.uploadQueue[idx].splice(state.uploadQueue[idx].indexOf(uploads[i]), 1);
+      state.uploadQueue[idx].splice(
+        state.uploadQueue[idx].indexOf(uploads[i]),
+        1
+      );
       state.currentUploadsNumber--;
     }
   },

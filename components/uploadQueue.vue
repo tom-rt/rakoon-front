@@ -4,7 +4,7 @@
   >
     <div class="flex w-full h-12 bg-gray-700 border items-center px-2">
       <div class="text-gray-100 text-sm">
-        {{ this.$store.getters.geCurrentUploadsNumber }} fichier(s) en cours
+        {{ this.$store.getters.getCurrentUploadsNumber }} fichier(s) en cours
         d'import
       </div>
       <pulse-loader
@@ -26,9 +26,6 @@ export default {
       loaderWidth: "5px",
       loaderSize: "5px",
     };
-  },
-  methods: {
-    async disconnect() {},
   },
   components: {
     PulseLoader,

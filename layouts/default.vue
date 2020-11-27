@@ -7,17 +7,17 @@
     <topbar />
     <div class="app-container flex flex-row w-full h-full">
       <div class="flex flex-col">
-        <client-only>
-          <nuxt />
-        </client-only>
+        <nuxt />
       </div>
-      <uploadQueue v-if="this.$store.getters.geCurrentUploadsNumber > 0" />
+      <uploadQueue v-if="this.$store.getters.getCurrentUploadsNumber > 0" />
+      <toast v-if="this.$store.getters.getToast == true" />
     </div>
   </div>
 </template>
 
 <script>
 import topbar from "@/components/topbar";
+import toast from "@/components/toast";
 import uploadQueue from "@/components/uploadQueue";
 export default {
   data() {
@@ -34,6 +34,7 @@ export default {
   components: {
     topbar,
     uploadQueue,
+    toast,
   },
 };
 </script>
