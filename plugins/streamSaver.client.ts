@@ -1,10 +1,11 @@
 import Vue from "vue";
 import { WritableStream } from "web-streams-polyfill/ponyfill";
-import streamSaver from "streamsaver";
+import * as streamSaver from "streamsaver";
 
 Vue.mixin({
   methods: {
-    streamSave(fileName, response) {
+    async streamSave(fileName, response) {
+
       if (!window.WritableStream) {
         streamSaver.WritableStream = WritableStream;
         window.WritableStream = WritableStream;
@@ -23,14 +24,18 @@ Vue.mixin({
       window.writer = fileStream.getWriter();
 
       const reader = response.body.getReader();
-      const pump = () =>
-        reader
-          .read()
-          .then((res) =>
-            res.done ? writer.close() : writer.write(res.value).then(pump)
-          );
+
+      const pump = async () => {
+        const res = await reader.read()
+        if (res.done) {
+          window.writer.close();
+        } else {
+          await window.writer.write(res.value);
+          pump();
+        }
+      }
 
       pump();
-    },
+    }
   },
 });

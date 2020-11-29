@@ -492,9 +492,10 @@ export default {
       await this.refreshDirectoryContent(this.currentPath);
     },
     async refreshDirectoryContent(path) {
-      const ret = await this.$axios.get(`/list/directory`, {
-        params: { path: path },
-      });
+      const ret =
+        (await this.$axios.get(`/list/directory`, {
+          params: { path: path },
+        })) || {};
       this.filter = "";
       this.directoryContent = ret.data || [];
       this.filteredContent = ret.data || [];
