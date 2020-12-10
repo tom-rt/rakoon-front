@@ -579,21 +579,7 @@ export default {
       const refresh = await this.$axios.post("/refresh/token");
       const token = refresh.data.token;
 
-      var url = new URL("https://api.rakoon.tech:443/v1/file");
-      // var url = new URL("http://localhost:8081/v1/file");
-
-      var params = { path: `${this.currentPath}/${fileName}` };
-
-      url.search = new URLSearchParams(params).toString();
-
-      const response = await fetch(url, {
-        method: "GET",
-        headers: new Headers({
-          Authorization: "Bearer " + token,
-        }),
-      });
-
-      this.streamSave(fileName, response);
+      this.streamSave(fileName, `${this.currentPath}/${fileName}`, token);
     },
     async createFolder() {
       if (this.newFolderName.length == 0) {

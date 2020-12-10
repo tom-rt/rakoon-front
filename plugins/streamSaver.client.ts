@@ -4,24 +4,25 @@ import * as streamSaver from "streamsaver";
 
 Vue.mixin({
   methods: {
-    async streamSave(fileName, response) {
+    async streamSave(fileName, fullPath, token) {
+
+      var url = new URL("https://api.rakoon.tech:443/v1/file");
+      var params = { path: fullPath };
+      url.search = new URLSearchParams(params).toString();
 
       if (!window.WritableStream) {
         streamSaver.WritableStream = WritableStream;
         window.WritableStream = WritableStream;
       }
-
       const fileStream = streamSaver.createWriteStream(fileName);
-      // const readableStream = response.body;
-
-      // more optimized
-      // if (readableStream.pipeTo) {
-      //   return readableStream
-      //     .pipeTo(fileStream)
-      //     .then(() => console.log("done writing"));
-      // }
-
       window.writer = fileStream.getWriter();
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: new Headers({
+          Authorization: "Bearer " + token,
+        }),
+      });
 
       const reader = response.body.getReader();
 
