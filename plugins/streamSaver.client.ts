@@ -12,14 +12,14 @@ Vue.mixin({
       }
 
       const fileStream = streamSaver.createWriteStream(fileName);
-      const readableStream = response.body;
+      // const readableStream = response.body;
 
       // more optimized
-      if (readableStream.pipeTo) {
-        return readableStream
-          .pipeTo(fileStream)
-          .then(() => console.log("done writing"));
-      }
+      // if (readableStream.pipeTo) {
+      //   return readableStream
+      //     .pipeTo(fileStream)
+      //     .then(() => console.log("done writing"));
+      // }
 
       window.writer = fileStream.getWriter();
 
