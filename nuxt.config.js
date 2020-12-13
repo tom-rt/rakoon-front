@@ -20,6 +20,11 @@ export default {
   buildDir: "dist",
   build: {
     additionalExtensions: ["ts", "tsx"],
+    extend(config) {
+      config.node = {
+        fs: 'empty'
+      }
+    }
   },
   link: [{ rel: "icon", type: "image/x-icon", href: "favicon.ico" }],
   loading: {
