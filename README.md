@@ -1,22 +1,6 @@
-# rakoon-front
+# Rakoon front-end
 
-> Rakoon front
-
-## Build Setup
-
-```bash
-# install dependencies
-$ npm install
-
-# serve with hot reload at localhost:3000
-$ npm run dev
-
-# build for production and launch server
-$ npm run build
-$ npm run start
-
-# generate static project
-$ npm run generate
-```
-
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+  Rakoon est un bureau distant permettant de stocker et télécharrger des fichiers dans le cloud, sans limite de temps.
+  Une gestion d'utilisateurs avec différents droits est implémentée et paramétable depuis un panneau de configuration.
+  L'authentification se fait à l'aide de jsons web tokens.
+  Ce dépot contient l'app front, en typescript, codée en Vue avec le framework Nuxt.
