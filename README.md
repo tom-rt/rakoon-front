@@ -1,6 +1,6 @@
 # rakoon-front
 
-> My neat Nuxt.js project
+> Rakoon front
 
 ## Build Setup
 
